@@ -13,12 +13,12 @@ const MessageSchema = new Schema(
       ref: "Thread",
       required: true,
     },
-    message: {
+    text: {
       type: String,
     },
-    attractments: {
+    attachments: {
       type: [Schema.Types.ObjectId],
-      ref: "Attractment",
+      ref: "Attachment",
       default: [],
     },
     senderVisibility: {

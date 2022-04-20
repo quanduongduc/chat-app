@@ -1,4 +1,4 @@
-import { useState, useContext } from 'react';
+import { useState, useContext, useRef } from 'react';
 import { SocketContext } from '../../context/SocketContext'
 import { AuthContext } from '../../context/AuthContext';
 import axios from 'axios';
@@ -7,6 +7,7 @@ import { apiURL } from '../../constants/constants';
 function MessageInput({ threadId }) {
     const ws = useContext(SocketContext).socket;
     const { user } = useContext(AuthContext).authState;
+    const attractmentRef = useRef();
 
     const [message, setMessage] = useState("");
     const [attractments, setAttractments] = useState([]);
@@ -17,8 +18,7 @@ function MessageInput({ threadId }) {
             const formData = new FormData();
             formData.append("sender", user._id)
             formData.append("threadId", threadId)
-            formData.append("message", message)
-            formData.append("sender", user._id)
+            formData.append("text", message)
             attractments.forEach((attractment) => {
                 formData.append("attractments", attractment)
 
@@ -28,7 +28,7 @@ function MessageInput({ threadId }) {
             data = {
                 sender: user._id,
                 threadId: threadId,
-                message: message,
+                text: message,
             }
         }
         const res = await axios.post(`${apiURL}/message`,
@@ -37,13 +37,20 @@ function MessageInput({ threadId }) {
                 headers: { 'content-type': 'multipart/form-data' },
                 withCredentials: true
             })
-        ws.send(JSON.stringify({
-            event: "clientMessage",
-            message: message,
-            sender: user._id,
-            threadId: threadId,
-            attractments: res.data.attractments,
-        }))
+
+        if (res) {
+            const { attachments } = res.data;
+            console.log("attachments " + attachments);
+            ws.send(JSON.stringify({
+                event: "clientMessage",
+                message: {
+                    text: message,
+                    sender: user._id,
+                    threadId: threadId,
+                    attachments,
+                }
+            }))
+        }
         if (res.data.success) {
             console.log("message send successfully");
         }
@@ -60,10 +67,10 @@ function MessageInput({ threadId }) {
             }
             console.log(error);
         }
+        attractmentRef.current.value = "";
         setMessage("");
+        setAttractments([]);
     }
-
-    console.log(attractments[0]);
 
     const messageOnchange = (e) => {
         ws.send(JSON.stringify({
@@ -75,27 +82,27 @@ function MessageInput({ threadId }) {
         setMessage(e.target.value)
     }
 
-    const imagesOnchange = (e) => {
-        setAttractments([...attractments, e.target.files[0]]);
+    const attachmentOnchange = (e) => {
+        setAttractments([...attractments, ...e.target.files]);
+        attractmentRef.current.value = "";
     }
 
     return (
         <>
             <form onSubmit={submitMessage}>
                 <input type="text" value={message} onChange={messageOnchange} />
-                <input type="file" id='image' accept='image/png, image/jpeg' onChange={imagesOnchange} />
+                <input ref={attractmentRef} type="file" id='attachment' multiple onChange={attachmentOnchange} />
                 <button>Send</button>
             </form>
             {
                 attractments.map((image, index) => {
                     const url = URL.createObjectURL(image)
-                    return <img style={
-                        {
-                            width: "300px"
-                        }
-                    } key={index
-                    } src={url
-                    } alt="preview" />
+                    return (
+                        <img style={{ width: "300px" }}
+                            key={index}
+                            src={url}
+                            alt="preview" />
+                    )
                 })
             }
         </>

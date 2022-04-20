@@ -15,8 +15,11 @@ const AttractmentSchema = new Schema({
     type: String,
     required: true,
   },
+  type: {
+    type: String,
+    required: true,
+    enum: ["image", "video", "raw"],
+  },
 });
 
-const Attractment = mongoose.model(AttractmentSchema);
-
-module.exports = Attractment;
+module.exports = mongoose.model("Attachment", AttractmentSchema);

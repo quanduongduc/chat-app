@@ -15,16 +15,14 @@ function App() {
           <Route
             path="/"
             element={<ProtectedRouter to="/messenger" Component={Navigate} />}
-          />
-          <Route path="register" element={<AuthPage route="register" />} />
-          <Route path="login" element={<AuthPage />} />
-          <Route
-            path="messenger"
-            element={<ProtectedRouter Component={MessagePage} />}
-          ></Route>
-          <Route path="u/:userId" element={<UserProfile />} />
-
-          <Route path="*" element={<NotFoundPage />} />
+          >
+            <Route path="register" element={<AuthPage route="register" />} />
+            <Route path="login" element={<AuthPage />} />
+            <Route path="*" element={<NotFoundPage />} />
+          </Route>
+          <Route path="messenger" element={<MessagePage />}>
+            <Route path="u/:userId" element={<UserProfile />} />
+          </Route>
         </Routes>
       </BrowserRouter>
     </AuthProvider>

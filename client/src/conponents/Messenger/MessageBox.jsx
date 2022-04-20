@@ -17,7 +17,7 @@ function MessageBox() {
         const data = JSON.parse(res.data);
         switch (data.event) {
             case "returnMessage":
-                setSocketMessage(data)
+                setSocketMessage(data.message)
                 break;
             case "retrunTyping":
                 break;
@@ -54,14 +54,17 @@ function MessageBox() {
 
 
     useEffect(() => {
-        if (socketMessage?.threadId !== currentThread?._id) {
-            const newSortedThreads = threads.filter((thread) => {
-                return thread._id !== socketMessage.threadId;
-            });
-            newSortedThreads.unshift({
-                _id: socketMessage.threadId,
-            })
-            setThreads(newSortedThreads);
+        if (socketMessage && currentThread) {
+            if (socketMessage.threadId !== currentThread._id) {
+                const newSortedThreads = threads.filter((thread) => {
+                    return thread._id !== socketMessage.threadId;
+                });
+                newSortedThreads.unshift({
+                    _id: socketMessage.threadId,
+                })
+                setThreads(newSortedThreads);
+            }
+
         }
     }, [socketMessage])
     return (

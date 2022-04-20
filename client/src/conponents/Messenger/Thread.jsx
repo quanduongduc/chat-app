@@ -8,13 +8,16 @@ function Thread({ threadId, socketMessage }) {
 
     useEffect(() => {
         if (socketMessage) {
-            setMessages([...messages, socketMessage]);
+            setMessages((messages) => [...messages, socketMessage]);
         }
     }, [socketMessage])
 
+
     async function getMessages() {
         try {
-            const response = await axios.get(`${apiURL}/message/${threadId}`)
+            const response = await axios.get(`${apiURL}/message/${threadId}`, {
+                withCredentials: true,
+            })
             if (response.data.success) {
                 setMessages(response.data.messages);
             }
@@ -29,15 +32,12 @@ function Thread({ threadId, socketMessage }) {
     useEffect(() => {
         getMessages();
     }, [threadId])
-
     return (
         <>
             <h2>{threadId}</h2>
             {
                 messages.map((message, index) => {
-                    return <Message key={index} message={
-                        `${message.sender.nickName} : ${message.message}`
-                    } />
+                    return <Message key={index} message={message} />
                 })
             }
         </>

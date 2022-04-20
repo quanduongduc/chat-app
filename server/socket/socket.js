@@ -4,31 +4,30 @@ let clients = [];
 
 const handleClientMessage = async (wss, data) => {
   try {
-    if (data.message) {
-      const threadQuery = Thread.findById(data.threadId)
-        .select("members _id")
-        .exec();
-      const nickNameQuery = User.findById(data.sender)
-        .select("nickName")
-        .exec();
-      const [{ members, _id }, { nickName }] = await Promise.all([
-        threadQuery,
-        nickNameQuery,
-      ]);
-      wss.clients.forEach((client) => {
-        if (members.includes(client.id)) {
-          console.log("send");
-          client.send(
-            JSON.stringify({
-              event: "returnMessage",
+    console.log(data);
+    const { threadId, sender, attachments, text } = data.message;
+    console.log("Attachments " + attachments);
+    const threadQuery = Thread.findById(threadId).select("members _id").exec();
+    const nickNameQuery = User.findById(sender).select("nickName").exec();
+    const [{ members, _id }, { nickName }] = await Promise.all([
+      threadQuery,
+      nickNameQuery,
+    ]);
+    wss.clients.forEach((client) => {
+      if (members.includes(client.id)) {
+        client.send(
+          JSON.stringify({
+            event: "returnMessage",
+            message: {
               sender: { nickName },
-              message: data.message,
+              text,
+              attachments,
               threadId: _id,
-            })
-          );
-        }
-      });
-    }
+            },
+          })
+        );
+      }
+    });
   } catch (error) {
     console.log(error);
   }
@@ -56,10 +55,8 @@ const handleClientSign = (ws, data) => {
 const sockets = (wss) => {
   wss.on("connection", (ws) => {
     console.log("a Client Connected");
-    console.log("clients : " + wss.clients.size);
 
     ws.on("close", () => {
-      console.log(ws.id);
       clients = clients.filter((client) => client != ws.id);
       console.log(clients);
       console.log("a client disconect");
@@ -67,9 +64,7 @@ const sockets = (wss) => {
 
     ws.on("message", (data) => {
       try {
-        console.log(data.toString("utf8"));
         data = JSON.parse(data);
-        console.log(data);
         switch (data.event) {
           case "sign":
             handleClientSign(ws, data);
