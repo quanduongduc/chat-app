@@ -16,14 +16,12 @@ function AuthProvider({ children }) {
         authenticate();
     }, [])
 
-
     async function authenticate() {
         try {
-            const res = await axios.post(`${apiURL}/auth`, {}, {
+            const res = await axios.get(`${apiURL}/auth`, {
                 withCredentials: true
             });
             if (res.data.success) {
-                console.log(res.data.user._id);
                 dispatch({
                     type: 'SET_AUTH',
                     payload: {

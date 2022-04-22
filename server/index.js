@@ -22,7 +22,7 @@ db.connectDB();
 
 app.use(
   cors({
-    origin: "http://localhost:3000",
+    origin: ["http://localhost:3000", "http://192.168.0.103:3000"],
     methods: ["GET", "POST", "DELETE", "UPDATE", "PUT", "PATCH"],
     credentials: true,
   })

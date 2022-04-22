@@ -3,6 +3,7 @@ import { AuthContext } from "../../context/AuthContext";
 import { Navigate } from 'react-router-dom'
 
 function ProtectedRouter({ Component, ...rest }) {
+    console.log("Protected rerender");
     const auth = useContext(AuthContext).authState;
     const { isAuthenticated, loading } = auth;
 

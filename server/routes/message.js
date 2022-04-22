@@ -1,4 +1,5 @@
 const { requiredAuth } = require("../middlewares/auth");
+const fs = require("fs");
 const Message = require("../models/Message");
 const Thread = require("../models/Thread");
 const router = require("express").Router();
@@ -34,6 +35,10 @@ router.post(
       }
       if (files.length) {
         const res = await cloudUpload(files);
+        console.log(files);
+        files.forEach((file) => {
+          fs.unlink(file.path, () => {});
+        });
         attachments = res.map((attachment) => {
           return {
             author: senderId,
@@ -68,6 +73,7 @@ router.post(
         attachments,
       });
     } catch (error) {
+      console.log(error);
       // cloudinary file's maximum size error
       if (error.name) {
         console.log("checked");

@@ -11,10 +11,12 @@ function SocketProvider({ children }) {
   const socket = new WebSocket(socketURL);
 
   socket.onopen = () => {
-    socket.send(JSON.stringify({
-      event: "sign",
-      userId: user._id,
-    }))
+    if (user) {
+      socket.send(JSON.stringify({
+        event: "sign",
+        userId: user._id,
+      }))
+    }
   };
 
   socket.onclose = () => {

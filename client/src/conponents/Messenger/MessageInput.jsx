@@ -10,16 +10,16 @@ function MessageInput({ threadId }) {
     const attractmentRef = useRef();
 
     const [message, setMessage] = useState("");
-    const [attractments, setAttractments] = useState([]);
+    const [attachments, setAttractments] = useState([]);
 
     const messageUpload = async () => {
         let data = null;
-        if (attractments) {
+        if (attachments) {
             const formData = new FormData();
             formData.append("sender", user._id)
             formData.append("threadId", threadId)
             formData.append("text", message)
-            attractments.forEach((attractment) => {
+            attachments.forEach((attractment) => {
                 formData.append("attractments", attractment)
 
             })
@@ -83,28 +83,69 @@ function MessageInput({ threadId }) {
     }
 
     const attachmentOnchange = (e) => {
-        setAttractments([...attractments, ...e.target.files]);
+        setAttractments([...attachments, ...e.target.files]);
         attractmentRef.current.value = "";
     }
 
+    const handleRemoveAttachment = (att) => {
+        const removedAttachments = attachments.filter((attachment) => {
+            return attachment !== att
+        })
+        setAttractments(removedAttachments);
+    }
+
+
     return (
         <>
-            <form onSubmit={submitMessage}>
-                <input type="text" value={message} onChange={messageOnchange} />
-                <input ref={attractmentRef} type="file" id='attachment' multiple onChange={attachmentOnchange} />
-                <button>Send</button>
-            </form>
-            {
-                attractments.map((image, index) => {
-                    const url = URL.createObjectURL(image)
-                    return (
-                        <img style={{ width: "300px" }}
-                            key={index}
-                            src={url}
-                            alt="preview" />
-                    )
-                })
-            }
+            <div className='w-full'>
+                <div className=' flex item-center gap-3 p-4'>
+                    {
+                        attachments.map((attachment, index) => {
+                            const mediaTypeRegrex = /((image)|(video)).*/i
+                            console.log(attachment.type);
+                            console.log(mediaTypeRegrex.test(attachment.type));
+                            if (mediaTypeRegrex.test(attachment.type)) {
+                                const url = URL.createObjectURL(attachment)
+                                return (
+                                    <div className='relative w-16 h-16'>
+                                        <img className='w-full h-full rounded-2xl' style={{ width: "300px" }}
+                                            key={index}
+                                            src={url}
+                                            alt="preview" />
+                                        <button className='absolute top-[-10px] right-[-10px] rounded-full bg-white p-2' onClick={() => handleRemoveAttachment(attachment)}>
+                                            <img src="/icons8-close.svg" alt="close icon" />
+                                        </button>
+                                    </div>
+                                )
+                            } else {
+                                return (
+                                    <div className='relative flex gap-3 bg-lightGray items-center p-4 rounded-xl'>
+                                        <img src="/document.svg" alt="document icon" />
+                                        <p>{attachment.name}</p>
+                                        <button className='absolute top-[-10px] right-[-10px] rounded-full bg-white p-2' onClick={() => handleRemoveAttachment(attachment)}>
+                                            <img src="/icons8-close.svg" alt="close icon" />
+                                        </button>
+                                    </div>
+                                )
+                            }
+                        })
+                    }
+                </div>
+                <form className='w-full flex px-10 pb-10 gap-5 items-center' onSubmit={submitMessage}>
+                    <div className='px-2'>
+                        <label className='cursor-pointer' htmlFor="attachment">
+                            <img src="/Frame.svg" alt="choose attachment" />
+                        </label>
+                        <input className='hidden' ref={attractmentRef} type="file" id='attachment' multiple onChange={attachmentOnchange} />
+                    </div>
+                    <div className='w-full flex justify-between gap-4'>
+                        <input className='p-5 outline-none flex-1 rounded-3xl border-2 border-lightGray shadow-sm focus:border-darkCyan' type="text" value={message} onChange={messageOnchange} placeholder="Start a new message" />
+                        <button className=' opacity-50 hover:opacity-100'>
+                            <img src="/send.svg" alt="send icon" />
+                        </button>
+                    </div>
+                </form>
+            </div>
         </>
     )
 }

@@ -11,7 +11,7 @@ const cookieConfig = {
   maxAge: 2592000000, // 30days
 };
 
-router.post("/", requiredAuth, async (req, res) => {
+router.get("/", requiredAuth, async (req, res) => {
   try {
     const { userId } = req.body;
     const user = await User.findById(userId).select("-password");

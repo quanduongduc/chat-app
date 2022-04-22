@@ -1,5 +1,5 @@
 import SocketProvider from "../context/SocketContext";
-import Messenger from "../conponents/Messenger/Messenger";
+import Messenger from "../conponents/messenger/Messenger";
 
 function MessagePage() {
   return (

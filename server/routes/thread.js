@@ -14,7 +14,15 @@ router.get("/", requiredAuth, async (req, res) => {
     })
       .limit(10)
       .lean()
-      .select("_id updatedAt")
+      .select("_id updatedAt memebers")
+      .populate({
+        path: "members",
+        match: {
+          _id: {
+            $ne: userId,
+          },
+        },
+      })
       .exec();
     if (!threads) {
       return res.status(404).json({

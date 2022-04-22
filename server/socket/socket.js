@@ -19,7 +19,10 @@ const handleClientMessage = async (wss, data) => {
           JSON.stringify({
             event: "returnMessage",
             message: {
-              sender: { nickName },
+              sender: {
+                _id: sender,
+                nickName,
+              },
               text,
               attachments,
               threadId: _id,
