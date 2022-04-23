@@ -42,7 +42,6 @@ function AuthProvider({ children }) {
                 console.log(error.response.data);
             }
             console.log(error)
-
         }
     }
 

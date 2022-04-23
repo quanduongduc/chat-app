@@ -4,9 +4,7 @@ let clients = [];
 
 const handleClientMessage = async (wss, data) => {
   try {
-    console.log(data);
     const { threadId, sender, attachments, text } = data.message;
-    console.log("Attachments " + attachments);
     const threadQuery = Thread.findById(threadId).select("members _id").exec();
     const nickNameQuery = User.findById(sender).select("nickName").exec();
     const [{ members, _id }, { nickName }] = await Promise.all([

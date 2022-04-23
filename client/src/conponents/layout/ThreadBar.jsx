@@ -1,14 +1,8 @@
+import { DateFormat } from "../../utils/DateTimeFormatter";
 function ThreadBar({ threads, currentThread, setCurrentThread }) {
-    const caculateDateDiff = (d1, d2) => {
-        if (d1 && d2) {
-            const diff = d1 - d2;
-            const dateDiff = diff / (1000 * 3600 * 24)
-            return Math.abs(dateDiff);
-        }
-        return undefined;
-    }
+
     return (
-        <div className="flex flex-col w-1/4 gap-7 justify-start items-center min-h-full py-8 text-base bg-lightestGray px-2">
+        <div className="flex flex-col w-1/4 gap-7 justify-start items-center min-h-full max-h-[100vh] overflow-y-scroll py-8 text-base bg-lightestGray px-2">
             <h2 className="w-full ml-right text-2xl font-semibold">Messages</h2>
             <div className="flex gap-2 border border-solid rounded-3xl px-5 py-2 border-lightGray w-full">
                 <img src="/fi_search.svg" alt="search icon" />
@@ -38,19 +32,9 @@ function ThreadBar({ threads, currentThread, setCurrentThread }) {
                                                 "Only You"
                                         }
                                     </p>
-                                    <p className="self-end">{
-                                        caculateDateDiff(new Date(Date.parse(thread.updatedAt)), Date.now())
-                                            > 1 ?
-                                            new Date(Date.parse(thread.updatedAt)).toLocaleDateString([], {
-                                                month: "long",
-                                                day: "numeric"
-                                            })
-                                            :
-                                            new Date(Date.parse(thread.updatedAt)).toLocaleTimeString([], {
-                                                hour: '2-digit',
-                                                minute: '2-digit',
-                                            })
-                                    }</p>
+                                    <p className="self-end">
+                                        {DateFormat(new Date(Date.parse(thread.updatedAt)))}
+                                    </p>
                                 </div>
                                 <div>
                                 </div>

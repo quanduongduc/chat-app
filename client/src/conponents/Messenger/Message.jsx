@@ -1,9 +1,25 @@
+import { useState } from 'react';
+import { DateFormat } from '../../utils/DateTimeFormatter'
 
 function Message({ message, isSender }) {
-    const { attachments, text, sender: { nickName } } = message
+    const { attachments, text, sender: { nickName }, createdAt } = message
+    const [isShowTime, setShowTime] = useState(false);
+    let timeout = null;
+
+    const showTime = () => {
+        timeout = setTimeout(() => {
+            setShowTime(true)
+        }, 700);
+    }
+
+    const hideTime = () => {
+        clearTimeout(timeout);
+        setShowTime(false);
+    }
+
     return (
         <>
-            <div className={`max-w-fit flex justify-end ${isSender ? "ml-auto" : ""}`}>
+            <div onMouseOver={showTime} onMouseOut={hideTime} className={`relative max-w-fit flex justify-end ${isSender ? "ml-auto" : ""}`}>
                 {
                     text &&
                     <div className={`py-4 px-6 max-w-full rounded-3xl text-sm ${isSender ?
@@ -40,6 +56,13 @@ function Message({ message, isSender }) {
                         }
                     })
                 }
+                <div className={`absolute top-1/2 -translate-y-1/2 text-xs rounded-lg bg-[#1c1e21] p-2 text-white shadow-md 
+                ${isSender ? "left-[-105px]" : "right-[-105px]"}
+                ${!isShowTime && "hidden"}`
+                }
+                >
+                    <p>{DateFormat(new Date(Date.parse(createdAt)))}</p>
+                </div>
             </div>
         </>
     )

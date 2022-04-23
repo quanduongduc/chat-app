@@ -64,7 +64,6 @@ function MessageBox() {
                 })
                 setThreads(newSortedThreads);
             }
-
         }
     }, [socketMessage])
     return (
