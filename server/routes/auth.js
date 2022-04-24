@@ -3,6 +3,16 @@ const router = require("express").Router();
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 const User = require("../models/User");
+const multer = require("multer");
+const cloudUpload = require("../helpers/CloudinaryUpload");
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, `./static/uploads`);
+  },
+  filename: function (req, file, cb) {
+    cb(null, file.originalname);
+  },
+});
 const requiredAuth = require("../middlewares/auth").requiredAuth;
 
 const cookieConfig = {

@@ -35,7 +35,6 @@ router.post(
       }
       if (files.length) {
         const res = await cloudUpload(files);
-        console.log(files);
         files.forEach((file) => {
           fs.unlink(file.path, () => {});
         });
@@ -47,6 +46,7 @@ router.post(
             type: attachment.resource_type,
           };
         });
+        console.log(attachments);
         const dbAttachment = await Attractment.collection.insertMany(
           attachments
         );

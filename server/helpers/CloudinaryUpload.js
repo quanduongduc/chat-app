@@ -1,3 +1,4 @@
+const path = require("path");
 require("dotenv").config();
 const cloudinary = require("cloudinary").v2;
 
@@ -28,8 +29,13 @@ const uploadConfig = {
 
 const upload = async (attractments) => {
   const uploads = attractments.map((attractment) => {
+    const publicId =
+      path.parse(attractment.originalname).name +
+      "_" +
+      ~~(Math.random() * 10000) +
+      path.parse(attractment.originalname).ext;
     return cloudinary.uploader.upload(attractment.path, {
-      use_filename: true,
+      public_id: publicId,
       resource_type: "auto",
       quality: "auto",
     });

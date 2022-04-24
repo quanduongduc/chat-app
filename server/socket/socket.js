@@ -24,6 +24,7 @@ const handleClientMessage = async (wss, data) => {
               text,
               attachments,
               threadId: _id,
+              createdAt: new Date(Date.now()).toISOString(),
             },
           })
         );
