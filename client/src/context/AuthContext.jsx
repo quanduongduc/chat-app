@@ -2,6 +2,7 @@ import { createContext, useReducer, useEffect } from "react";
 import axios from 'axios';
 import { apiURL } from "../constants/constants";
 import { authReducer } from "../reducers/authReducer";
+import { useNavigate } from "react-router-dom";
 
 export const AuthContext = createContext();
 
@@ -11,6 +12,8 @@ function AuthProvider({ children }) {
         loading: true,
         user: null,
     });
+
+    const navigate = useNavigate();
 
     useEffect(() => {
         authenticate();
@@ -38,7 +41,7 @@ function AuthProvider({ children }) {
                     user: null,
                 }
             })
-            if (error.response.data) {
+            if (error.response) {
                 console.log(error.response.data);
             }
             console.log(error)
@@ -55,7 +58,7 @@ function AuthProvider({ children }) {
             }
             return loginRes.data
         } catch (error) {
-            if (error.response.data) {
+            if (error.response) {
                 console.log(error.response.data);
             }
             console.log(error);
@@ -68,11 +71,36 @@ function AuthProvider({ children }) {
                 withCredentials: true,
             })
             if (registerRes.data.success) {
-                await authenticate();
+                const res = await authenticate();
+                if (res.data.success) {
+                    navigate('/messenger')
+                }
             }
             return registerRes.data
         } catch (error) {
-            if (error.response.data) {
+            if (error.response) {
+                console.log(error.response.data);
+            }
+            console.log(error);
+        }
+    }
+
+    async function logout() {
+        try {
+            const res = await axios.post(`${apiURL}/auth/logout`, {}, {
+                withCredentials: true,
+            })
+            if (res.data.success) {
+                dispatch({
+                    type: 'SET_AUTH',
+                    payload: {
+                        isAuthenticated: false,
+                        user: null,
+                    }
+                })
+            }
+        } catch (error) {
+            if (error.response) {
                 console.log(error.response.data);
             }
             console.log(error);
@@ -84,6 +112,7 @@ function AuthProvider({ children }) {
         authState,
         login,
         register,
+        logout,
     }
 
 

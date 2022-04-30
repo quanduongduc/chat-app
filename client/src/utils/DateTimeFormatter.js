@@ -2,7 +2,6 @@ export const DateFormat = (date) => {
   if (!date) {
     return undefined;
   }
-  console.log(date);
   const diff = dateDiff(date, Date.now());
   if (diff < 1) {
     return date.toLocaleTimeString([], {

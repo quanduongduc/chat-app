@@ -2,16 +2,16 @@ import "./App.css";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import AuthPage from "./pages/AuthPage";
 import MessagePage from "./pages/MessagePage";
-import UserProfile from "./conponents/user/UserProfile";
+import UserProfile from "./components/user/UserProfile";
 import NotFoundPage from "./pages/NotFoundPage";
 import AuthProvider from "./context/AuthContext";
-import ProtectedRouter from "./conponents/routing/ProtectedRoute";
+import ProtectedRouter from "./components/routing/ProtectedRoute";
 
 function App() {
   console.log("app rerender");
   return (
-    <AuthProvider>
-      <BrowserRouter>
+    <BrowserRouter>
+      <AuthProvider>
         <Routes>
           <Route
             path="/"
@@ -27,8 +27,8 @@ function App() {
           </Route>
           <Route path="*" element={<NotFoundPage />} />
         </Routes>
-      </BrowserRouter>
-    </AuthProvider>
+      </AuthProvider>
+    </BrowserRouter>
   );
 }
 

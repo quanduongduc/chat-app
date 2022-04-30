@@ -9,32 +9,23 @@ cloudinary.config({
   secure: true,
 });
 
-const uploadConfig = {
-  resource_type: "auto",
-  public_id: "myfolder/mysubfolder/dog_closeup",
-  chunk_size: 6000000,
-  eager: [
-    { width: 300, height: 300, crop: "pad", audio_codec: "none" },
-    {
-      width: 160,
-      height: 100,
-      crop: "crop",
-      gravity: "south",
-      audio_codec: "none",
-    },
-  ],
-  eager_async: true,
-  eager_notification_url: "https://mysite.example.com/notify_endpoint",
-};
-
-const upload = async (attractments) => {
-  const uploads = attractments.map((attractment) => {
-    const publicId =
-      path.parse(attractment.originalname).name +
-      "_" +
-      ~~(Math.random() * 10000) +
-      path.parse(attractment.originalname).ext;
-    return cloudinary.uploader.upload(attractment.path, {
+const upload = async (attachments) => {
+  const mediaRegrex = /((image)|(video)).*/;
+  const uploads = attachments.map((attachment) => {
+    let public_id = "";
+    if (mediaRegrex.test(attachment.mimetype)) {
+      publicId =
+        path.parse(attachment.originalname).name +
+        "_" +
+        ~~(Math.random() * 10000);
+    } else {
+      publicId =
+        path.parse(attachment.originalname).name +
+        "_" +
+        ~~(Math.random() * 10000) +
+        path.parse(attachment.originalname).ext;
+    }
+    return cloudinary.uploader.upload(attachment.path, {
       public_id: publicId,
       resource_type: "auto",
       quality: "auto",

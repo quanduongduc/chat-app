@@ -2,8 +2,11 @@ import axios from "axios";
 import { useState, useEffect, useContext, useRef } from "react";
 import { apiURL } from "../../constants/constants";
 import Message from "./Message";
+import Avatar from "../avatar/Avatar";
 import { AuthContext } from "../../context/AuthContext";
+
 function Thread({ thread, socketMessage }) {
+    const { members } = thread;
     const [messages, setMessages] = useState([]);
     const { user } = useContext(AuthContext).authState;
     useEffect(() => {
@@ -11,8 +14,8 @@ function Thread({ thread, socketMessage }) {
             setMessages((messages) => [...messages, socketMessage]);
         }
     }, [socketMessage])
-    const threadBoxRef = useRef();
 
+    const threadBoxRef = useRef();
 
     async function getMessages() {
         try {
@@ -42,23 +45,34 @@ function Thread({ thread, socketMessage }) {
     return (
         <>
             <div className="w-full flex gap-3 items-center border-b shadow-sm p-5">
-                <img className="rounded-full w-12 h-12" src="https://i.stack.imgur.com/l60Hf.png" alt="avatar" />
+                <div className="rounded-full w-12 h-12 overflow-hidden">
+                    {members.length ?
+                        members.map((member) => {
+                            return <Avatar key={member._id} avatarPath={member.avatarPath}></Avatar>
+                        })
+                        :
+                        <Avatar avatarPath={user.avatarPath}></Avatar>
+                    }
+                </div>
                 <p>
                     {
-                        thread.members.map((member) => {
-                            return member.nickName
-                        }).join(',')
+                        members.length ?
+                            members.map((member) => {
+                                return member.nickName
+                            }).join(',')
+                            :
+                            user.nickName
                     }
                 </p>
             </div>
-            <div ref={threadBoxRef} className="w-full flex flex-col p-8 overflow-y-scroll">
+            <div ref={threadBoxRef} className="w-full flex flex-1 flex-col p-8 overflow-y-scroll">
                 {
                     messages.map((message, index) => {
                         return (
-                            <div key={index} className={
+                            <div key={message._id} className={
                                 `w-full max-w-prose my-2  ${message.sender._id === user._id ? "ml-auto text-white " : "mr-auto"} `
                             }>
-                                <Message isSender={message.sender._id === user._id} message={message} />
+                                <Message isSender={message.sender._id === user._id} message={message} isLast={index === messages.length - 1} />
                             </div>
                         )
                     })

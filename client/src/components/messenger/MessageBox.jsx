@@ -8,7 +8,8 @@ import ThreadBar from "../layout/ThreadBar";
 
 
 function MessageBox() {
-    const [threads, setThreads] = useState(null);
+    const [threads, setThreads] = useState([]);
+    const [isLoading, setIsLoading] = useState(true);
     const [currentThread, setCurrentThread] = useState(null);
     const [socketMessage, setSocketMessage] = useState();
 
@@ -38,6 +39,7 @@ function MessageBox() {
                 });
                 setThreads(threads);
                 setCurrentThread(threads[0]);
+                setIsLoading(false);
             }
         } catch (error) {
             if (error.response) {
@@ -66,17 +68,24 @@ function MessageBox() {
             }
         }
     }, [socketMessage])
+
     return (
         <>
-            {threads && currentThread ?
+            {!isLoading ?
                 <div className="flex max-h-[100vh]">
                     <ThreadBar threads={threads}
                         currentThread={currentThread}
-                        setCurrentThread={setCurrentThread} />
-                    <div className="w-full flex flex-col ">
-                        <Thread thread={currentThread} socketMessage={socketMessage?.threadId === currentThread._id ? socketMessage : null}></Thread>
-                        <MessageInput threadId={currentThread._id}></MessageInput>
-                    </div>
+                        setCurrentThread={setCurrentThread}
+                        setThreads={setThreads} />
+                    {
+                        threads.length ?
+                            <div className="w-full flex flex-col">
+                                <Thread thread={currentThread} socketMessage={socketMessage?.threadId === currentThread._id ? socketMessage : null}></Thread>
+                                <MessageInput threadId={currentThread._id}></MessageInput>
+                            </div> :
+                            <div>You don't have a threads
+                                selected. </div>
+                    }
                 </div>
                 :
                 <img src='/Spinner-1.2s-231px.gif' alt="" />

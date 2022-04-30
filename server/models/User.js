@@ -11,14 +11,19 @@ const UserSchema = new Schema(
       type: String,
       required: true,
     },
-    gender: {
-      type: String,
-      enum: ["Male", "Female", "Other"],
-      default: "Other",
-    },
     password: {
       type: String,
       required: true,
+    },
+    avatarPath: {
+      type: String,
+      default:
+        "https://res.cloudinary.com/quanduong/image/upload/v1651298952/default-avatar_oulphd.jpg",
+    },
+    gender: {
+      type: String,
+      enum: ["Male", "Female", "Undefined"],
+      default: "Undefined",
     },
     friends: {
       type: [String],

@@ -10,8 +10,13 @@ module.exports = {
       lightestGray: "#FAFAFA",
       darkCyan: "#21978B",
       white: colors.white,
+      inherit: colors.inherit,
     },
-    extend: {},
+    extend: {
+      backgroundImage: {
+        "auth-bg": "url('../src/assets/images/auth-bg.jpg')",
+      },
+    },
   },
   plugins: [],
 };
