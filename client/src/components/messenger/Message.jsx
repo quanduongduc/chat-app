@@ -25,7 +25,7 @@ function Message({ message, isSender, isLast }) {
 
     return (
         <>
-            <div onMouseOver={showTime} onMouseOut={hideTime} className={`relative gap-2 max-w-fit flex flex-wrap ${isSender ? "ml-auto justify-end" : ""}`}>
+            <div onMouseOver={showTime} onMouseOut={hideTime} className={`relative gap-2 max-w-full flex flex-wrap ${isSender ? "ml-auto justify-end" : ""}`}>
                 {
                     text &&
                     <div className='max-w-full flex-1 basis-full w-full'>
@@ -50,7 +50,7 @@ function Message({ message, isSender, isLast }) {
                             case "raw":
                                 return (
                                     <div className='max-w-full flex-1 basis-full w-full'>
-                                        <a key={_id} href={path} className={`flex items-center gap-2 py-4 px-6 max-w-fit rounded-3xl text-sm ${isSender ?
+                                        <a key={_id} href={path} className={`flex items-center gap-2 py-4 px-6 max-w-fit w-fit rounded-3xl text-sm ${isSender ?
                                             "bg-darkCyan ml-auto text-right"
                                             :
                                             "bg-lightestGray text-left"

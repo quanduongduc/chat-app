@@ -114,7 +114,13 @@ function ThreadBar({ threads, currentThread, setCurrentThread, setThreads }) {
                                     }
                                 }}>
                                 <div className="rounded-full w-12 h-12 overflow-hidden" >
-                                    <Avatar avatarPath={user.avatarPath}></Avatar>
+                                    {thread.members.length ?
+                                        thread.members.map((member) => {
+                                            <Avatar avatarPath={member.avatarPath}></Avatar>
+                                        })
+                                        :
+                                        <Avatar avatarPath={user.avatarPath}></Avatar>
+                                    }
                                 </div>
                                 <div className="w-full flex justify-between">
                                     <p className="font-semibold">
