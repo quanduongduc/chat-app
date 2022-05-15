@@ -6,13 +6,16 @@ const handleClientMessage = async (wss, data) => {
   try {
     const { threadId, sender, attachments, text } = data.message;
     const threadQuery = Thread.findById(threadId).select("members _id").exec();
-    const nickNameQuery = User.findById(sender).select("nickName").exec();
-    const [{ members, _id }, { nickName }] = await Promise.all([
+    const nickNameQuery = User.findById(sender)
+      .select("nickName avatarPath")
+      .exec();
+    const [{ members, _id }, { nickName, avatarPath }] = await Promise.all([
       threadQuery,
       nickNameQuery,
     ]);
+    console.log(avatarPath);
     wss.clients.forEach((client) => {
-      if (members.includes(client.id)) {
+      if (members.includes(client.id) && client.id != sender) {
         client.send(
           JSON.stringify({
             event: "returnMessage",
@@ -20,6 +23,7 @@ const handleClientMessage = async (wss, data) => {
               sender: {
                 _id: sender,
                 nickName,
+                avatarPath,
               },
               text,
               attachments,

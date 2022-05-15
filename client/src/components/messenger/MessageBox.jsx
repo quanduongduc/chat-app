@@ -81,7 +81,7 @@ function MessageBox() {
                         threads.length ?
                             <div className="w-full flex flex-col">
                                 <Thread thread={currentThread} socketMessage={socketMessage?.threadId === currentThread._id ? socketMessage : null}></Thread>
-                                <MessageInput threadId={currentThread._id}></MessageInput>
+                                <MessageInput threadId={currentThread._id} setSocketMessage={setSocketMessage}></MessageInput>
                             </div> :
                             <div>You don't have a threads
                                 selected. </div>

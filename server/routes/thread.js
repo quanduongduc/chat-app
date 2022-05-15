@@ -25,7 +25,6 @@ router.get("/", requiredAuth, async (req, res) => {
         },
       })
       .exec();
-    console.log(threads);
     if (!threads) {
       return res.status(404).json({
         success: false,
@@ -77,19 +76,7 @@ router.post("/:userId", requiredAuth, async (req, res) => {
       const thread = new Thread({
         members: [senderId, receiverId],
       });
-      console.log(thread);
       await thread.save();
-      thread
-        .select("_id updatedAt memebers")
-        .populate({
-          path: "members",
-          match: {
-            _id: {
-              $ne: senderId,
-            },
-          },
-        })
-        .exec();
       await Thread.populate(thread, {
         path: "members",
         match: {
@@ -98,8 +85,6 @@ router.post("/:userId", requiredAuth, async (req, res) => {
           },
         },
       });
-      console.log("populate", thread);
-
       return res.send({
         success: true,
         message: "New Thread was created",

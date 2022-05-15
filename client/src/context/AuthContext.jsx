@@ -1,8 +1,10 @@
-import { createContext, useReducer, useEffect } from "react";
+import { createContext, useReducer, useEffect, useState } from "react";
 import axios from 'axios';
 import { apiURL } from "../constants/constants";
 import { authReducer } from "../reducers/authReducer";
 import { useNavigate } from "react-router-dom";
+import Toast from '../components/toast/Toast'
+import ToastModal from "../components/toast/ToastModal";
 
 export const AuthContext = createContext();
 
@@ -12,6 +14,12 @@ function AuthProvider({ children }) {
         loading: true,
         user: null,
     });
+
+    const [showToast, setShowToast] = useState({
+        show: false,
+        message: '',
+        type: null,
+    })
 
     const navigate = useNavigate();
 
@@ -42,9 +50,12 @@ function AuthProvider({ children }) {
                 }
             })
             if (error.response) {
-                console.log(error.response.data);
+                setShowToast({
+                    show: true,
+                    message: error.response.data.message,
+                    type: "error"
+                })
             }
-            console.log(error)
         }
     }
 
@@ -59,7 +70,11 @@ function AuthProvider({ children }) {
             return loginRes.data
         } catch (error) {
             if (error.response) {
-                console.log(error.response.data);
+                setShowToast({
+                    show: true,
+                    message: error.response.data.message,
+                    type: "error"
+                })
             }
             console.log(error);
         }
@@ -71,15 +86,18 @@ function AuthProvider({ children }) {
                 withCredentials: true,
             })
             if (registerRes.data.success) {
-                const res = await authenticate();
-                if (res.data.success) {
-                    navigate('/messenger')
-                }
+                await authenticate();
+                navigate('/messenger')
             }
             return registerRes.data
         } catch (error) {
+            console.log(error.response);
             if (error.response) {
-                console.log(error.response.data);
+                setShowToast({
+                    show: true,
+                    message: error.response.data.message,
+                    type: "error"
+                })
             }
             console.log(error);
         }
@@ -101,7 +119,11 @@ function AuthProvider({ children }) {
             }
         } catch (error) {
             if (error.response) {
-                console.log(error.response.data);
+                setShowToast({
+                    show: true,
+                    message: error.response.data.message,
+                    type: "error"
+                })
             }
             console.log(error);
         }
@@ -115,10 +137,16 @@ function AuthProvider({ children }) {
         logout,
     }
 
-
+    console.log("rerender");
+    console.log(showToast);
     return <AuthContext.Provider value={authContextData
     }>
         {children}
+        {
+            showToast.show &&
+            <ToastModal toast={<Toast message={showToast.message} type={showToast.type} setShowToast={setShowToast}></Toast>}>
+            </ToastModal>
+        }
     </AuthContext.Provider>
 }
 

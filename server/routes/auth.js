@@ -86,9 +86,6 @@ router.post("/register", upload.single("avatar"), async (req, res) => {
   try {
     const { nickName, userName, password, confirmPassword } = req.body;
     const avatar = req.file;
-
-    console.log(req.body);
-
     if (!nickName || !userName || !password || !confirmPassword) {
       return res.status(401).json({
         success: false,
@@ -112,7 +109,6 @@ router.post("/register", upload.single("avatar"), async (req, res) => {
 
     if (avatar) {
       const [{ url }] = await cloudUpload([avatar]);
-      console.log(url);
       fs.unlink(avatar.path, () => {});
       avatar.url = url;
     }
@@ -122,9 +118,8 @@ router.post("/register", upload.single("avatar"), async (req, res) => {
       nickName,
       userName,
       password: hashPassword,
-      avatarPath: avatar.url,
+      avatarPath: avatar && avatar.url,
     });
-    console.log(user);
     await user.save();
     const accessToken = jwt.sign(
       {

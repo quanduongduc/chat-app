@@ -1,4 +1,4 @@
-import { useState, useContext, useRef, useEffect } from 'react';
+import { useState, useContext, useRef, useEffect, useCallback } from 'react';
 import { SocketContext } from '../../context/SocketContext'
 import { AuthContext } from '../../context/AuthContext';
 import axios from 'axios';
@@ -9,31 +9,46 @@ import closeIcon from '../../assets/images/icons8-close.svg'
 import documentIcon from '../../assets/images/document.svg'
 
 
-function MessageInput({ threadId }) {
+function MessageInput({ threadId, setSocketMessage }) {
     const ws = useContext(SocketContext).socket;
     const { user } = useContext(AuthContext).authState;
     const attractmentRef = useRef();
 
-    const [message, setMessage] = useState("");
+    const [text, setText] = useState("");
     const [attachments, setAttractments] = useState([]);
 
+
+    const handleSendingMessage = useCallback((message) => {
+        setSocketMessage(message);
+    }, [setSocketMessage])
+
     const messageUpload = async () => {
+        const message = {
+            sender: {
+                _id: user._id,
+                nickName: user.nickName,
+            },
+            text,
+            attachments,
+            threadId: threadId,
+            createdAt: new Date(Date.now()).toISOString(),
+        }
+        handleSendingMessage(message)
         let data = null;
         if (attachments) {
             const formData = new FormData();
             formData.append("sender", user._id)
             formData.append("threadId", threadId)
-            formData.append("text", message)
+            formData.append("text", text)
             attachments.forEach((attractment) => {
                 formData.append("attractments", attractment)
-
             })
             data = formData
         } else {
             data = {
                 sender: user._id,
                 threadId: threadId,
-                text: message,
+                text: text,
             }
         }
         const res = await axios.post(`${apiURL}/message`,
@@ -49,7 +64,7 @@ function MessageInput({ threadId }) {
             ws.send(JSON.stringify({
                 event: "clientMessage",
                 message: {
-                    text: message,
+                    text: text,
                     sender: user._id,
                     threadId: threadId,
                     attachments,
@@ -73,7 +88,7 @@ function MessageInput({ threadId }) {
             console.log(error);
         }
         attractmentRef.current.value = "";
-        setMessage("");
+        setText("");
         setAttractments([]);
     }
 
@@ -84,7 +99,7 @@ function MessageInput({ threadId }) {
             typing: true,
             threadId: threadId
         }))
-        setMessage(e.target.value)
+        setText(e.target.value)
     }
 
     const attachmentOnchange = (e) => {
@@ -114,11 +129,13 @@ function MessageInput({ threadId }) {
                     {
                         attachments.map((attachment) => {
                             const mediaTypeRegrex = /((image)|(video)).*/i
+                            const videoRegrex = /(video).*/i
                             if (mediaTypeRegrex.test(attachment.type)) {
                                 const url = URL.createObjectURL(attachment)
+                                const Component = videoRegrex.test(attachment.type) ? "video" : "img";
                                 return (
                                     <div key={attachment._id} className='relative w-64 h-64'>
-                                        <img className='w-full h-full rounded-2xl'
+                                        <Component className='w-full h-full rounded-2xl'
                                             src={url}
                                             alt="preview" />
                                         <button className='absolute top-[-10px] right-[-10px] rounded-full bg-white p-2' onClick={() => handleRemoveAttachment(attachment)}>
@@ -150,7 +167,7 @@ function MessageInput({ threadId }) {
                         <input className='hidden' ref={attractmentRef} type="file" id='attachment' multiple onChange={attachmentOnchange} />
                     </div>
                     <div className='w-full flex justify-between gap-4'>
-                        <input className='p-5 outline-none flex-1 rounded-3xl border-2 border-lightGray shadow-sm focus:border-darkCyan' type="text" value={message} onChange={messageOnchange} placeholder="Start a new message" />
+                        <input className='p-5 outline-none flex-1 rounded-3xl border-2 border-lightGray shadow-sm focus:border-darkCyan' type="text" value={text} onChange={messageOnchange} placeholder="Start a new message" />
                         <button className=' opacity-50 hover:opacity-100'>
                             <img src={sendIcon} alt="send icon" />
                         </button>

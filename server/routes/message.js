@@ -97,7 +97,7 @@ router.get("/:threadId", async (req, res) => {
       thread: threadId,
     })
       .lean()
-      .populate("sender", "nickName")
+      .populate("sender", "_id nickName avatarPath")
       .populate("attachments")
       .exec();
     if (!messages) {

@@ -11,6 +11,7 @@ module.exports = {
       darkCyan: "#21978B",
       white: colors.white,
       inherit: colors.inherit,
+      red: colors.red,
     },
     extend: {
       backgroundImage: {

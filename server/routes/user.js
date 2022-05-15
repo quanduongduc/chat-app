@@ -2,13 +2,9 @@ const mongoose = require("mongoose");
 const User = require("../models/User");
 const router = require("express").Router();
 
-router.get("/:userId", (req, res) => {
-  console.log(req.params);
-});
+router.get("/:userId", (req, res) => {});
 
-router.patch("/:userId", (req, res) => {
-  console.log(req.parems.id);
-});
+router.patch("/:userId", (req, res) => {});
 
 router.post("/", async (req, res) => {
   try {
@@ -37,7 +33,6 @@ router.post("/", async (req, res) => {
         },
       },
     ]);
-    console.log(users);
 
     return res.send({
       success: true,

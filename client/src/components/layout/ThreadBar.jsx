@@ -90,7 +90,7 @@ function ThreadBar({ threads, currentThread, setCurrentThread, setThreads }) {
                     {
                         serachedUsers.map((user, index) => {
                             return (
-                                <div key={index} className="flex items-center gap-3 w-full cursor-pointer hover:bg-lightGray rounded-lg px-3 py-5" onClick={() => { handleThreadSwitch(user._id) }}>
+                                <div key={user._id} className="flex items-center gap-3 w-full cursor-pointer hover:bg-lightGray rounded-lg px-3 py-5" onClick={() => { handleThreadSwitch(user._id) }}>
                                     <div className="rounded-full w-12 h-12 overflow-hidden" >
                                         <Avatar avatarPath={user.avatarPath}></Avatar>
                                     </div>
@@ -103,12 +103,12 @@ function ThreadBar({ threads, currentThread, setCurrentThread, setThreads }) {
             </div>
             <div className="w-full flex flex-grow flex-col gap-4 overflow-y-auto scrollbar">
                 {
-                    threads.map((thread, index) => {
+                    threads.map((thread) => {
                         return (
                             <div
                                 className={`flex items-center gap-3 w-full cursor-pointer hover:bg-lightGray rounded-lg px-3 py-5 ${thread._id === currentThread._id && "bg-lightGray"
                                     }`}
-                                key={index} onClick={() => {
+                                key={thread._id} onClick={() => {
                                     if (currentThread !== thread._id) {
                                         setCurrentThread(thread)
                                     }
@@ -116,7 +116,7 @@ function ThreadBar({ threads, currentThread, setCurrentThread, setThreads }) {
                                 <div className="rounded-full w-12 h-12 overflow-hidden" >
                                     {thread.members.length ?
                                         thread.members.map((member) => {
-                                            <Avatar avatarPath={member.avatarPath}></Avatar>
+                                            return <Avatar key={member._id} avatarPath={member.avatarPath}></Avatar>
                                         })
                                         :
                                         <Avatar avatarPath={user.avatarPath}></Avatar>
