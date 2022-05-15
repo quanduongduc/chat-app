@@ -18,12 +18,6 @@ const upload = multer({ storage });
 
 const requiredAuth = require("../middlewares/auth").requiredAuth;
 
-const cookieConfig = {
-  secure: false, // true if Production env
-  httpOnly: true,
-  maxAge: 2592000000, // 30days
-};
-
 router.get("/", requiredAuth, async (req, res) => {
   try {
     const { userId } = req.body;
@@ -68,11 +62,10 @@ router.post("/login", async (req, res) => {
 
     const accessToken = jwt.sign({ userId: user._id }, process.env.SECRET_KEY);
 
-    res.cookie("accessToken", accessToken, cookieConfig);
-
     return res.send({
       success: "true",
       message: "Login Successfully",
+      accessToken,
     });
   } catch (error) {
     console.log(error);
@@ -127,10 +120,10 @@ router.post("/register", upload.single("avatar"), async (req, res) => {
       },
       process.env.SECRET_KEY
     );
-    res.cookie("accessToken", accessToken, cookieConfig);
     return res.send({
       success: true,
       message: "Register Successfully",
+      accessToken,
     });
   } catch (error) {
     console.log(error);

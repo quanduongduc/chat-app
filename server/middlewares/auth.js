@@ -4,7 +4,9 @@ const User = require("../models/User");
 
 const requiredAuth = async (req, res, next) => {
   try {
-    const { accessToken } = req.cookies;
+    const authHeader = req.header("Authorization");
+    const accessToken = authHeader && authHeader.split(" ")[1];
+    console.log(accessToken);
     if (!accessToken) {
       return res.status(401).json({
         success: false,

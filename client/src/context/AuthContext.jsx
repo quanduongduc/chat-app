@@ -5,6 +5,7 @@ import { authReducer } from "../reducers/authReducer";
 import { useNavigate } from "react-router-dom";
 import Toast from '../components/toast/Toast'
 import ToastModal from "../components/toast/ToastModal";
+import { setAuthToken } from "../utils/SetAuthToken";
 
 export const AuthContext = createContext();
 
@@ -29,6 +30,7 @@ function AuthProvider({ children }) {
 
     async function authenticate() {
         try {
+            setAuthToken(localStorage.getItem('accessToken'))
             const res = await axios.get(`${apiURL}/auth`, {
                 withCredentials: true
             });
@@ -42,6 +44,7 @@ function AuthProvider({ children }) {
                 })
             }
         } catch (error) {
+            localStorage.clear("accessToken");
             dispatch({
                 type: 'SET_AUTH',
                 payload: {
@@ -49,13 +52,6 @@ function AuthProvider({ children }) {
                     user: null,
                 }
             })
-            if (error.response) {
-                setShowToast({
-                    show: true,
-                    message: error.response.data.message,
-                    type: "error"
-                })
-            }
         }
     }
 
@@ -65,6 +61,7 @@ function AuthProvider({ children }) {
                 withCredentials: true,
             });
             if (loginRes.data.success) {
+                localStorage.setItem("accessToken", loginRes.data.accessToken)
                 await authenticate();
             }
             return loginRes.data
@@ -86,6 +83,7 @@ function AuthProvider({ children }) {
                 withCredentials: true,
             })
             if (registerRes.data.success) {
+                localStorage.setItem("accessToken", registerRes.data.accessToken)
                 await authenticate();
                 navigate('/messenger')
             }
@@ -105,18 +103,14 @@ function AuthProvider({ children }) {
 
     async function logout() {
         try {
-            const res = await axios.post(`${apiURL}/auth/logout`, {}, {
-                withCredentials: true,
+            localStorage.clear("accessToken")
+            dispatch({
+                type: 'SET_AUTH',
+                payload: {
+                    isAuthenticated: false,
+                    user: null,
+                }
             })
-            if (res.data.success) {
-                dispatch({
-                    type: 'SET_AUTH',
-                    payload: {
-                        isAuthenticated: false,
-                        user: null,
-                    }
-                })
-            }
         } catch (error) {
             if (error.response) {
                 setShowToast({

@@ -6,7 +6,6 @@ const ws = require("ws");
 const app = express();
 const cors = require("cors");
 const bodyParser = require("body-parser");
-const cookieParser = require("cookie-parser");
 const server = http.createServer(app);
 const wss = new ws.WebSocketServer({ server });
 const sockets = require("./socket/socket");
@@ -38,7 +37,6 @@ app.use(function (req, res, next) {
   next();
 });
 
-app.use(cookieParser());
 app.use(bodyParser.json());
 
 app.use("/api/v1/auth", authRoute);
