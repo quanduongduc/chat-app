@@ -46,22 +46,23 @@ function Thread({ thread, socketMessage }) {
         <>
             <div className="w-full flex gap-3 items-center border-b shadow-sm p-5">
                 <div className="rounded-full w-12 h-12 overflow-hidden">
-                    {members.length ?
-                        members.map((member) => {
-                            return <Avatar key={member._id} avatarPath={member.avatarPath}></Avatar>
-                        })
-                        :
-                        <Avatar avatarPath={user.avatarPath}></Avatar>
+                    {
+                        thread.members.some(member => member._id !== user.id) ?
+                            thread.members.filter(member => member._id !== user._id).map(function (member) {
+                                return <Avatar key={member._id} avatarPath={member.avatarPath}></Avatar>
+                            })
+                            :
+                            <Avatar avatarPath={user.avatarPath}></Avatar>
                     }
                 </div>
                 <p>
                     {
-                        members.length ?
-                            members.map((member) => {
+                        thread.members.some(member => member._id !== user.id) ?
+                            thread.members.filter(member => member._id !== user._id).map(function (member) {
                                 return member.nickName
                             }).join(',')
                             :
-                            user.nickName
+                            "Only You"
                     }
                 </p>
             </div>

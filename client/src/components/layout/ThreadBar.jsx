@@ -14,7 +14,6 @@ function ThreadBar({ threads, currentThread, setCurrentThread, setThreads }) {
     const [serachedUsers, setSearchedUsers] = useState
         ([])
     const navigate = useNavigate();
-
     const handleThreadSwitch = async (userId) => {
         try {
             const res = await axios.post(`${apiURL}/thread/${userId}`, {}, {
@@ -106,7 +105,7 @@ function ThreadBar({ threads, currentThread, setCurrentThread, setThreads }) {
                     threads.map((thread) => {
                         return (
                             <div
-                                className={`flex items-center gap-3 w-full cursor-pointer hover:bg-lightGray rounded-lg px-3 py-5 ${thread._id === currentThread._id && "bg-lightGray"
+                                className={`flex items-center gap-3 w-full cursor-pointer hover:bg-lightGray rounded-lg px-3 py-5 ${currentThread && thread._id === currentThread._id && "bg-lightGray"
                                     }`}
                                 key={thread._id} onClick={() => {
                                     if (currentThread !== thread._id) {
@@ -114,20 +113,26 @@ function ThreadBar({ threads, currentThread, setCurrentThread, setThreads }) {
                                     }
                                 }}>
                                 <div className="rounded-full w-12 h-12 overflow-hidden" >
-                                    {thread.members.length ?
-                                        thread.members.map((member) => {
-                                            return <Avatar key={member._id} avatarPath={member.avatarPath}></Avatar>
-                                        })
-                                        :
-                                        <Avatar avatarPath={user.avatarPath}></Avatar>
+
+                                    {
+                                        thread.members.length ?
+                                            thread.members.map((member) => {
+                                                if (member._id !== user._id) {
+                                                    return <Avatar key={member._id} avatarPath={member.avatarPath}></Avatar>
+                                                } else {
+                                                    return null;
+                                                }
+                                            })
+                                            :
+                                            <Avatar avatarPath={user.avatarPath}></Avatar>
                                     }
                                 </div>
                                 <div className="w-full flex justify-between">
                                     <p className="font-semibold">
                                         {
-                                            thread.members.length ?
-                                                thread.members.map((member) => {
-                                                    return member.nickName;
+                                            thread.members.some(member => member._id !== user.id) ?
+                                                thread.members.filter(member => member._id !== user._id).map(function (member) {
+                                                    return member.nickName
                                                 }).join(',')
                                                 :
                                                 "Only You"

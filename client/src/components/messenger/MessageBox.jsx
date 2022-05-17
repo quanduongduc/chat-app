@@ -18,6 +18,7 @@ function MessageBox() {
         const data = JSON.parse(res.data);
         switch (data.event) {
             case "returnMessage":
+                console.log(data);
                 setSocketMessage(data.message)
                 break;
             case "retrunTyping":
@@ -56,16 +57,24 @@ function MessageBox() {
 
 
     useEffect(() => {
-        if (socketMessage && currentThread) {
-            if (socketMessage.threadId !== currentThread._id) {
-                const newSortedThreads = threads.filter((thread) => {
-                    return thread._id !== socketMessage.threadId;
-                });
-                newSortedThreads.unshift({
-                    _id: socketMessage.threadId,
-                })
-                setThreads(newSortedThreads);
-            }
+        if (!socketMessage) {
+            return;
+        }
+        console.log(socketMessage);
+        if (threads.findIndex((thread) => {
+            return thread._id === socketMessage.thread._id;
+        }) === -1) {
+            setThreads([...threads, socketMessage.thread])
+        }
+        if (!currentThread) {
+            return;
+        }
+        if (socketMessage.thread._id !== currentThread._id) {
+            const newSortedThreads = threads.filter((thread) => {
+                return thread._id !== socketMessage.thread._id;
+            });
+            newSortedThreads.unshift(socketMessage.thread)
+            setThreads(newSortedThreads);
         }
     }, [socketMessage])
 
@@ -73,15 +82,26 @@ function MessageBox() {
         <>
             {!isLoading ?
                 <div className="flex max-h-[100vh]">
-                    <ThreadBar threads={threads}
-                        currentThread={currentThread}
-                        setCurrentThread={setCurrentThread}
-                        setThreads={setThreads} />
+                    {
+
+                        <ThreadBar threads={threads}
+                            currentThread={currentThread}
+                            setCurrentThread={setCurrentThread}
+                            setThreads={setThreads} />
+                    }
                     {
                         threads.length ?
                             <div className="w-full flex flex-col">
-                                <Thread thread={currentThread} socketMessage={socketMessage?.threadId === currentThread._id ? socketMessage : null}></Thread>
-                                <MessageInput threadId={currentThread._id} setSocketMessage={setSocketMessage}></MessageInput>
+                                {
+                                    currentThread &&
+                                    <>
+                                        <Thread thread={currentThread}
+                                            socketMessage={currentThread && socketMessage?.thread?._id === currentThread._id ? socketMessage : null}></Thread>
+                                        <MessageInput thread={currentThread}
+                                            setSocketMessage={setSocketMessage}></MessageInput>
+                                    </>
+                                }
+
                             </div> :
                             <div>You don't have a threads
                                 selected. </div>

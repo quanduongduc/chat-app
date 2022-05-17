@@ -16,14 +16,7 @@ router.get("/", requiredAuth, async (req, res) => {
       .limit(10)
       .lean()
       .select("_id updatedAt members")
-      .populate({
-        path: "members",
-        match: {
-          _id: {
-            $ne: userId,
-          },
-        },
-      })
+      .populate("members", "-password")
       .exec();
     if (!threads) {
       return res.status(404).json({
@@ -56,15 +49,8 @@ router.post("/:userId", requiredAuth, async (req, res) => {
       },
     })
       .lean()
-      .select("_id updatedAt memebers")
-      .populate({
-        path: "members",
-        match: {
-          _id: {
-            $ne: senderId,
-          },
-        },
-      })
+      .select("_id updatedAt members")
+      .populate("members", "-password")
       .exec();
     if (thread) {
       return res.send({
@@ -79,11 +65,6 @@ router.post("/:userId", requiredAuth, async (req, res) => {
       await thread.save();
       await Thread.populate(thread, {
         path: "members",
-        match: {
-          _id: {
-            $ne: senderId,
-          },
-        },
       });
       return res.send({
         success: true,

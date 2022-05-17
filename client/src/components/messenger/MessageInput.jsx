@@ -9,7 +9,7 @@ import closeIcon from '../../assets/images/icons8-close.svg'
 import documentIcon from '../../assets/images/document.svg'
 
 
-function MessageInput({ threadId, setSocketMessage }) {
+function MessageInput({ thread, setSocketMessage }) {
     const ws = useContext(SocketContext).socket;
     const { user } = useContext(AuthContext).authState;
     const attractmentRef = useRef();
@@ -30,7 +30,7 @@ function MessageInput({ threadId, setSocketMessage }) {
             },
             text,
             attachments,
-            threadId: threadId,
+            thread: thread,
             createdAt: new Date(Date.now()).toISOString(),
         }
         handleSendingMessage(message)
@@ -38,7 +38,7 @@ function MessageInput({ threadId, setSocketMessage }) {
         if (attachments) {
             const formData = new FormData();
             formData.append("sender", user._id)
-            formData.append("threadId", threadId)
+            formData.append("threadId", thread._id)
             formData.append("text", text)
             attachments.forEach((attractment) => {
                 formData.append("attractments", attractment)
@@ -47,7 +47,7 @@ function MessageInput({ threadId, setSocketMessage }) {
         } else {
             data = {
                 sender: user._id,
-                threadId: threadId,
+                threadId: thread._id,
                 text: text,
             }
         }
@@ -65,7 +65,7 @@ function MessageInput({ threadId, setSocketMessage }) {
                 message: {
                     text: text,
                     sender: user._id,
-                    threadId: threadId,
+                    threadId: thread._id,
                     attachments,
                 }
             }))
@@ -93,7 +93,7 @@ function MessageInput({ threadId, setSocketMessage }) {
             event: "clientTyping",
             sender: user.nickName,
             typing: true,
-            threadId: threadId
+            thread: thread._id
         }))
         setText(e.target.value)
     }
