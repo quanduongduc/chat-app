@@ -22,6 +22,7 @@ function Thread({ thread, socketMessage }) {
 
     async function getMessages() {
         try {
+            setLoading(true)
             const response = await axios.get(`${apiURL}/message/${thread._id}`, {
                 withCredentials: true,
             })
@@ -41,7 +42,12 @@ function Thread({ thread, socketMessage }) {
         if (threadBoxRef.current) {
             threadBoxRef.current.scrollTop = threadBoxRef.current.scrollHeight
         }
-    })
+        return () => {
+            return () => {
+                setLoading(true);
+            }
+        }
+    }, [])
 
     useEffect(() => {
         getMessages();
@@ -70,7 +76,7 @@ function Thread({ thread, socketMessage }) {
                     }
                 </p>
             </div>
-            <div ref={threadBoxRef} className="w-full flex flex-1 flex-col p-8 overflow-y-scroll">
+            <div ref={threadBoxRef} className="relative w-full flex flex-1 flex-col p-8 overflow-y-scroll">
                 {
                     !loading ?
                         messages.map((message, index) => {
@@ -83,7 +89,9 @@ function Thread({ thread, socketMessage }) {
                             )
                         })
                         :
-                        <img src={loadingIcon} alt="loading" />
+                        <div className="absolute top-[50%] right-[50%] -translate-y-1/2 translate-x-1/2">
+                            <img src={loadingIcon} alt="loading" />
+                        </div>
                 }
 
             </div>
