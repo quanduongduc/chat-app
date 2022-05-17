@@ -101,9 +101,9 @@ router.post("/register", upload.single("avatar"), async (req, res) => {
     }
 
     if (avatar) {
-      const [{ url }] = await cloudUpload([avatar]);
+      const [{ secure_url }] = await cloudUpload([avatar]);
       fs.unlink(avatar.path, () => {});
-      avatar.url = url;
+      avatar.url = secure_url;
     }
 
     const hashPassword = await bcrypt.hash(password, 10);

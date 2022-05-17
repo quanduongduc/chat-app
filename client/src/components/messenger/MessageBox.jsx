@@ -5,7 +5,7 @@ import Thread from "./Thread";
 import MessageInput from "./MessageInput";
 import { SocketContext } from "../../context/SocketContext";
 import ThreadBar from "../layout/ThreadBar";
-
+import Loading from '../../assets/images/Spinner-1.2s-231px.gif'
 
 function MessageBox() {
     const [threads, setThreads] = useState([]);

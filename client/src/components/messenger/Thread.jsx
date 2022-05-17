@@ -4,9 +4,12 @@ import { apiURL } from "../../constants/constants";
 import Message from "./Message";
 import Avatar from "../avatar/Avatar";
 import { AuthContext } from "../../context/AuthContext";
+import loadingIcon from '../../assets/images/Spinner-1.2s-231px.gif'
+
 
 function Thread({ thread, socketMessage }) {
     const { members } = thread;
+    const [loading, setLoading] = useState(true);
     const [messages, setMessages] = useState([]);
     const { user } = useContext(AuthContext).authState;
     useEffect(() => {
@@ -24,6 +27,7 @@ function Thread({ thread, socketMessage }) {
             })
             if (response.data.success) {
                 setMessages(response.data.messages);
+                setLoading(false);
             }
         } catch (error) {
             if (error.response) {
@@ -47,8 +51,8 @@ function Thread({ thread, socketMessage }) {
             <div className="w-full flex gap-3 items-center border-b shadow-sm p-5">
                 <div className="rounded-full w-12 h-12 overflow-hidden">
                     {
-                        thread.members.some(member => member._id !== user.id) ?
-                            thread.members.filter(member => member._id !== user._id).map(function (member) {
+                        members.some(member => member._id !== user.id) ?
+                            members.filter(member => member._id !== user._id).map(function (member) {
                                 return <Avatar key={member._id} avatarPath={member.avatarPath}></Avatar>
                             })
                             :
@@ -57,8 +61,8 @@ function Thread({ thread, socketMessage }) {
                 </div>
                 <p>
                     {
-                        thread.members.some(member => member._id !== user.id) ?
-                            thread.members.filter(member => member._id !== user._id).map(function (member) {
+                        members.some(member => member._id !== user.id) ?
+                            members.filter(member => member._id !== user._id).map(function (member) {
                                 return member.nickName
                             }).join(',')
                             :
@@ -68,16 +72,20 @@ function Thread({ thread, socketMessage }) {
             </div>
             <div ref={threadBoxRef} className="w-full flex flex-1 flex-col p-8 overflow-y-scroll">
                 {
-                    messages.map((message, index) => {
-                        return (
-                            <div key={message._id} className={
-                                `w-full max-w-prose my-2  ${message.sender._id === user._id ? "ml-auto text-white " : "mr-auto"} `
-                            }>
-                                <Message isSender={message.sender._id === user._id} message={message} isLast={index === messages.length - 1} />
-                            </div>
-                        )
-                    })
+                    !loading ?
+                        messages.map((message, index) => {
+                            return (
+                                <div key={message._id} className={
+                                    `w-full max-w-prose my-2  ${message.sender._id === user._id ? "ml-auto text-white " : "mr-auto"} `
+                                }>
+                                    <Message isSender={message.sender._id === user._id} message={message} isLast={index === messages.length - 1} />
+                                </div>
+                            )
+                        })
+                        :
+                        <img src={loadingIcon} alt="loading" />
                 }
+
             </div>
         </>
     )
