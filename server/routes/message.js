@@ -42,11 +42,10 @@ router.post(
           return {
             author: senderId,
             name: attachment.public_id,
-            path: attachment.url,
+            path: attachment.secure_url,
             type: attachment.resource_type,
           };
         });
-        console.log(attachments);
         const dbAttachment = await Attractment.collection.insertMany(
           attachments
         );

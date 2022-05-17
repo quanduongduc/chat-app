@@ -29,6 +29,7 @@ const upload = async (attachments) => {
       public_id: publicId,
       resource_type: "auto",
       quality: "auto",
+      secure: true,
     });
   });
   const res = await Promise.all(uploads);
