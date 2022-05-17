@@ -23,7 +23,8 @@ app.use(
   cors({
     origin: [
       "http://localhost:3000",
-      "https://main--clinquant-profiterole-18fa11.netlify.app/*",
+      "https://clinquant-profiterole-18fa11.netlify.app",
+      "https://main--clinquant-profiterole-18fa11.netlify.app",
     ],
     methods: ["GET", "POST", "DELETE", "UPDATE", "PUT", "PATCH"],
     credentials: true,
