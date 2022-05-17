@@ -5,7 +5,6 @@ import Avatar from '../avatar/Avatar';
 
 function Message({ message, isSender, isLast }) {
     const { attachments, text, sender: { nickName, avatarPath }, createdAt } = message
-    console.log(message);
     const [isShowTime, setShowTime] = useState(false);
     let timeout = null;
     const showTime = () => {
@@ -25,7 +24,6 @@ function Message({ message, isSender, isLast }) {
     useEffect(() => {
         return () => {
             attachments.forEach((attachment) => {
-                console.log("revoke");
                 URL.revokeObjectURL(attachment.path)
             })
         }

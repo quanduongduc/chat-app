@@ -8,7 +8,6 @@ import AuthProvider from "./context/AuthContext";
 import ProtectedRouter from "./components/routing/ProtectedRoute";
 
 function App() {
-  console.log("app rerender");
   return (
     <BrowserRouter>
       <AuthProvider>

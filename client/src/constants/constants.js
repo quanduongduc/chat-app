@@ -5,4 +5,4 @@ export const apiURL =
 export const socketURL =
   process.env.NODE_ENV !== "production"
     ? "ws://localhost:5000/api/v1"
-    : "ws://chat-app-server-051102.herokuapp.com";
+    : "wss://chat-app-server-051102.herokuapp.com";

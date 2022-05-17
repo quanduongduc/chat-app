@@ -131,8 +131,6 @@ function AuthProvider({ children }) {
         logout,
     }
 
-    console.log("rerender");
-    console.log(showToast);
     return <AuthContext.Provider value={authContextData
     }>
         {children}
