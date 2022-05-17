@@ -60,7 +60,6 @@ function MessageInput({ threadId, setSocketMessage }) {
 
         if (res) {
             const { attachments } = res.data;
-            console.log("attachments " + attachments);
             ws.send(JSON.stringify({
                 event: "clientMessage",
                 message: {
@@ -70,9 +69,6 @@ function MessageInput({ threadId, setSocketMessage }) {
                     attachments,
                 }
             }))
-        }
-        if (res.data.success) {
-            console.log("message send successfully");
         }
     }
 

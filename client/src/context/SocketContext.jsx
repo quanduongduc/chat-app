@@ -19,10 +19,6 @@ function SocketProvider({ children }) {
     }
   };
 
-  socket.onclose = () => {
-    console.log("close socket");
-  }
-
   const SocketContextData = {
     socket,
   };
