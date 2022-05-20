@@ -1,10 +1,10 @@
 import axios from "axios";
-import { useState, useEffect, useContext, useRef } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
+import loadingIcon from '../../assets/images/Spinner-1.2s-231px.gif';
 import { apiURL } from "../../constants/constants";
-import Message from "./Message";
-import Avatar from "../avatar/Avatar";
 import { AuthContext } from "../../context/AuthContext";
-import loadingIcon from '../../assets/images/Spinner-1.2s-231px.gif'
+import Avatar from "../avatar/Avatar";
+import Message from "./Message";
 
 
 function Thread({ thread, socketMessage }) {

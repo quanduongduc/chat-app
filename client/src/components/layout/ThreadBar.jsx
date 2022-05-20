@@ -1,12 +1,12 @@
-import { useState, useContext, useRef, useEffect } from "react";
-import { DateFormat } from "../../utils/DateTimeFormatter";
-import { AuthContext } from '../../context/AuthContext';
-import { debounce } from '../../utils/Debounce';
 import axios from "axios";
-import { apiURL } from "../../constants/constants";
-import { ReactComponent as SearchIcon } from '../../assets/images/fi_search.svg'
-import Avatar from "../avatar/Avatar";
+import { useContext, useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { ReactComponent as SearchIcon } from '../../assets/images/fi_search.svg';
+import { apiURL } from "../../constants/constants";
+import { AuthContext } from '../../context/AuthContext';
+import { DateFormat } from "../../utils/DateTimeFormatter";
+import { debounce } from '../../utils/Debounce';
+import Avatar from "../avatar/Avatar";
 
 function ThreadBar({ threads, currentThread, setCurrentThread, setThreads }) {
     const [searchUser, setSearchUser] = useState('');

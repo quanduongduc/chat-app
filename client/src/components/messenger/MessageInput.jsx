@@ -1,12 +1,12 @@
-import { useState, useContext, useRef, useEffect, useCallback } from 'react';
-import { SocketContext } from '../../context/SocketContext'
-import { AuthContext } from '../../context/AuthContext';
 import axios from 'axios';
+import { useCallback, useContext, useEffect, useRef, useState } from 'react';
+import documentIcon from '../../assets/images/document.svg';
+import imagePicker from '../../assets/images/Frame.svg';
+import closeIcon from '../../assets/images/icons8-close.svg';
+import sendIcon from '../../assets/images/send.svg';
 import { apiURL } from '../../constants/constants';
-import imagePicker from '../../assets/images/Frame.svg'
-import sendIcon from '../../assets/images/send.svg'
-import closeIcon from '../../assets/images/icons8-close.svg'
-import documentIcon from '../../assets/images/document.svg'
+import { AuthContext } from '../../context/AuthContext';
+import { SocketContext } from '../../context/SocketContext';
 
 
 function MessageInput({ thread, setSocketMessage }) {

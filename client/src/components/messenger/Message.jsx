@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
-import { DateFormat } from '../../utils/DateTimeFormatter'
-import documentIcon from '../../assets/images/document.svg'
+import documentIcon from '../../assets/images/document.svg';
+import { DateFormat } from '../../utils/DateTimeFormatter';
 import Avatar from '../avatar/Avatar';
 
 function Message({ message, isSender, isLast }) {

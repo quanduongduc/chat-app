@@ -1,10 +1,11 @@
-import React, { useState, useContext, useEffect } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
+import imagePicker from '../../assets/images/Frame.svg'
+import { AuthContext } from '../../context/AuthContext'
+import { confirmPasswordValidate, nickNameValidate, passwordValidate, userNameValidate } from '../../utils/FormValidator'
+import Avatar from '../avatar/Avatar'
 import Button from '../form/Button'
 import TextField from '../form/TextField'
-import { AuthContext } from '../../context/AuthContext'
-import Avatar from '../avatar/Avatar'
-import imagePicker from '../../assets/images/Frame.svg'
 
 const Register = () => {
     const [userInput, setUserInput] = useState({
@@ -15,6 +16,7 @@ const Register = () => {
         confirmPassword: '',
     })
 
+    const [errors, setErrors] = useState({});
     const { register, authState: { isAuthenticated } } = useContext(AuthContext);
 
     const handleChange = (e) => {
@@ -57,11 +59,26 @@ const Register = () => {
         await register(inputFormData);
     }
 
+    const handleOnBlur = (validateCb, input, type) => {
+        const validateRes = validateCb(input, type);
+        if (!validateRes.isValid) {
+            setErrors({
+                ...errors, [type]: {
+                    message: validateRes.message,
+                    rules: validateRes.rules
+                }
+            })
+        } else {
+            delete errors[type];
+            setErrors({ ...errors })
+        }
+    }
+
     const Inputs = [
-        { id: "nickName", type: "text", placeholder: "nickName", value: `${userInput.nickName}`, name: 'nickName' },
-        { id: "text", type: "text", placeholder: "UserName", value: `${userInput.userName}`, name: 'userName' },
-        { id: "password", type: "password", placeholder: "Password", value: `${userInput.password}`, name: 'password' },
-        { id: "confirmPassword", type: "password", placeholder: "confirmPassword", value: `${userInput.confirmPassword}`, name: 'confirmPassword' },
+        { id: "nickName", type: "text", placeholder: "nickName", value: `${userInput.nickName}`, name: 'nickName', onBlur: function (e) { handleOnBlur(nickNameValidate, userInput.userName, e.target.name) } },
+        { id: "text", type: "text", placeholder: "UserName", value: `${userInput.userName}`, name: 'userName', onBlur: function (e) { handleOnBlur(userNameValidate, userInput.userName, e.target.name) } },
+        { id: "password", type: "password", placeholder: "Password", value: `${userInput.password}`, name: 'password', onBlur: function (e) { handleOnBlur(passwordValidate, userInput.userName, e.target.name) } },
+        { id: "confirmPassword", type: "password", placeholder: "confirmPassword", value: `${userInput.confirmPassword}`, name: 'confirmPassword', onBlur: function (e) { handleOnBlur(confirmPasswordValidate, userInput.userName, e.target.name) } },
         { id: "image", type: "file", accept: "image/*", placeholder: "", hidden: true, name: 'image', },
     ]
 
@@ -71,16 +88,33 @@ const Register = () => {
                 <form className="bg-white w-96 mt-6 p-4 rounded-lg shadow-lg" onSubmit={handleSubmit}>
                     <div className="flex flex-col space-y-6">
                         {Inputs.map((input, index) => (
-                            <TextField className={`${input.hidden ? "hidden" : ""}`}
-                                id={input.id}
-                                key={index}
-                                type={input.type}
-                                placeholder={input.placeholder}
-                                value={input.value}
-                                name={input.name}
-                                accept={input.accept}
-                                onChange={handleChange}
-                            />
+                            <div>
+                                <TextField className={`${input.hidden ? "hidden" : ""}`}
+                                    id={input.id}
+                                    key={index}
+                                    type={input.type}
+                                    placeholder={input.placeholder}
+                                    value={input.value}
+                                    name={input.name}
+                                    accept={input.accept}
+                                    onChange={handleChange}
+                                    onBlur={input.onBlur}
+                                />
+                                {
+                                    errors[input.name] &&
+                                    <div className='flex gap-2 flex-col mt-2'>
+                                        <p className='text-red-500 font-bold'>{errors[input.name].message}</p>
+                                        {
+                                            errors[input.name].rules &&
+                                            <ul className='list-disc'>
+                                                {
+                                                    errors[input.name].rules.map((rule) => <li className='ml-5'>{rule}</li>)
+                                                }
+                                            </ul>
+                                        }
+                                    </div>
+                                }
+                            </div>
                         ))}
                         <label className='flex gap-2 items-center' htmlFor="image">
                             <div className='w-6 h-6'>
@@ -94,7 +128,7 @@ const Register = () => {
                             </div>}
                     </div>
 
-                    <Button text="Sign Up" />
+                    <Button disabled={Object.keys(errors).length > 0} text="Sign Up" />
                     <Link to="/login">
                         <p className="text-base text-primary text-center my-6 hover:underline">
                             {isAuthenticated ? "Back To Chat" :

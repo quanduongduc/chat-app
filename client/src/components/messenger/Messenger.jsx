@@ -1,4 +1,4 @@
-import MessageBox from './MessageBox'
+import MessageBox from './MessageBox';
 
 function Messenger() {
     return (

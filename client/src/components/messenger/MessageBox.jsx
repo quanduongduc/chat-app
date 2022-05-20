@@ -1,11 +1,11 @@
-import { useState, useEffect, useContext } from "react";
 import axios from "axios";
+import { useContext, useEffect, useState } from "react";
+import loadingIcon from '../../assets/images/Spinner-1.2s-231px.gif';
 import { apiURL } from "../../constants/constants";
-import Thread from "./Thread";
-import MessageInput from "./MessageInput";
 import { SocketContext } from "../../context/SocketContext";
 import ThreadBar from "../layout/ThreadBar";
-import Loading from '../../assets/images/Spinner-1.2s-231px.gif'
+import MessageInput from "./MessageInput";
+import Thread from "./Thread";
 
 function MessageBox() {
     const [threads, setThreads] = useState([]);
@@ -53,6 +53,7 @@ function MessageBox() {
 
     useEffect(() => {
         getThreads();
+
     }, [])
 
 
@@ -108,7 +109,7 @@ function MessageBox() {
                     }
                 </div>
                 :
-                <img src='/Spinner-1.2s-231px.gif' alt="" />
+                <img src={loadingIcon} alt="loading" />
             }
         </>
     )
