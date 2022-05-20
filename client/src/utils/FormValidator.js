@@ -66,6 +66,9 @@ export function passwordValidate(password, type) {
 }
 
 export function confirmPasswordValidate(password, confirmPassword) {
+  if (confirmPassword) {
+    return { isValid: false, message: "Password confirmation is required" };
+  }
   if (password !== confirmPassword) {
     return {
       isValid: false,
