@@ -75,10 +75,11 @@ router.post("/login", loginValidator, requestValidator, async (req, res) => {
 
 router.post(
   "/register",
+  upload.single("avatar"),
   registerValidator,
   requestValidator,
-  upload.single("avatar"),
   async (req, res) => {
+    console.log(req.body);
     try {
       const { nickName, userName, password, confirmPassword } = req.body;
       const avatar = req.file;

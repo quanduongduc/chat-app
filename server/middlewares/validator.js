@@ -1,50 +1,17 @@
 const { body, validationResult } = require("express-validator");
 
+const passwordRegex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$/;
+const userNameRegex = /^[A-Za-z]\w{5,29}$/i;
+const nickNameRegex = /^[\w\d]{5,30}$/i;
+
 const registerValidator = [
-  body()
-    .custom((value) => {
-      const fields = Object.keys(value);
-      if (!fields.length) {
-        return false;
-      }
-      fields.forEach((field) => {
-        if (
-          !body(field).exists({
-            checkFalsy: true,
-            checkNull: true,
-          })
-        ) {
-          return false;
-        }
-      });
-      return true;
-    })
-    .withMessage({
-      success: false,
-      message: "Something is missing, please try again",
-    }),
-
-  body("nickName", {
+  body(["nickName", "userName", "password", "confirmPassword"], {
     success: false,
-    message: "NickName is not valid",
-  })
-    .exists()
-    .isLength({ min: 5, max: 30 })
-    .matches(/^[\w\d]{5,30}$/i),
-
-  body("userName", {
-    success: false,
-    message: "UserName is not valid",
-  })
-    .isLength({ min: 5, max: 30 })
-    .matches(/^[A-Za-z]\w{5,29}$/i),
-
-  body("password", {
-    success: false,
-    message: "Password is not valid",
-  })
-    .isLength({ min: 8 })
-    .matches(/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$/),
+    message: "Something is missing, please try again",
+  }).exists({
+    checkFalsy: true,
+    checkNull: true,
+  }),
 
   body("confirmPassword", {
     success: false,
@@ -66,6 +33,11 @@ const loginValidator = [
     .withMessage({
       success: false,
       message: "Something is missing, please try again",
+    })
+    .matches(userNameRegex)
+    .withMessage({
+      success: false,
+      message: "userName or password is incorrect",
     }),
   body("password")
     .exists({
@@ -75,10 +47,16 @@ const loginValidator = [
     .withMessage({
       success: false,
       message: "Something is missing, please try again",
+    })
+    .matches(passwordRegex)
+    .withMessage({
+      success: false,
+      message: "userName or password is incorrect",
     }),
 ];
 
 function requestValidator(req, res, next) {
+  console.log(req.body);
   const errors = validationResult(req).array({ onlyFirstError: true });
   if (errors.length) {
     return res.status(401).json(errors[0].msg);
