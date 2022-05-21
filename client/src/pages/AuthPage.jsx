@@ -1,8 +1,8 @@
-import { AuthContext } from "../context/AuthContext";
 import { useContext } from "react";
 import { Navigate } from "react-router-dom";
 import Login from "../components/auth/LogIn";
-import Register from '../components/auth/Register'
+import Register from '../components/auth/Register';
+import { AuthContext } from "../context/AuthContext";
 
 function AuthPage({ route }) {
 

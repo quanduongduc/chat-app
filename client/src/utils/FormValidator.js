@@ -1,4 +1,4 @@
-export function userNameValidate(userName, type) {
+export function userNameValidate(userName) {
   const message = {
     isValid: true,
     message: "",
@@ -7,17 +7,15 @@ export function userNameValidate(userName, type) {
     return {
       isValid: false,
       message: "userName is required",
-      type,
     };
   }
-  const userNameRegex = /^[A-Za-z][\w{5, 29}]*$/i;
-  console.log(userNameRegex.test(userName));
+  const userNameRegex = /^[A-Za-z]\w{5,29}$/i;
   if (!userNameRegex.test(userName)) {
     return {
       isValid: false,
       message: "userName is not valid",
       rules: [
-        "Use at least five and maximum 30 characters",
+        "Use at least 6 and maximum 30 characters",
         "First character must not be numeric",
       ],
     };
@@ -25,7 +23,7 @@ export function userNameValidate(userName, type) {
   return message;
 }
 
-export function nickNameValidate(nickName, type) {
+export function nickNameValidate(nickName) {
   const message = {
     isValid: true,
     message: "",
@@ -36,10 +34,21 @@ export function nickNameValidate(nickName, type) {
       message: "NickName is required",
     };
   }
+  const nickNameRegex = /^[\w\d]{5,30}$/i;
+  if (!nickNameRegex.test(nickName)) {
+    return {
+      isValid: false,
+      message: "NickName is not valid",
+      rules: [
+        "Use at least 5 and maximum 30 characters",
+        "Special characters are not allowed",
+      ],
+    };
+  }
   return message;
 }
 
-export function passwordValidate(password, type) {
+export function passwordValidate(password) {
   const message = {
     isValid: true,
     message: "",
@@ -65,7 +74,7 @@ export function passwordValidate(password, type) {
   return message;
 }
 
-export function confirmPasswordValidate(password, confirmPassword) {
+export function confirmPasswordValidate(confirmPassword, password) {
   if (!confirmPassword) {
     return { isValid: false, message: "Password confirmation is required" };
   }

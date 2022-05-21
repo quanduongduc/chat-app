@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useContext, useEffect, useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
 import imagePicker from '../../assets/images/Frame.svg'
 import { AuthContext } from '../../context/AuthContext'
@@ -59,8 +59,8 @@ const Register = () => {
         await register(inputFormData);
     }
 
-    const handleOnBlur = (validateCb, input, type) => {
-        const validateRes = validateCb(input, type);
+    function handleOnBlur(validateCb, type, ...cbArgs) {
+        const validateRes = validateCb(...cbArgs);
         if (!validateRes.isValid) {
             setErrors({
                 ...errors, [type]: {
@@ -73,12 +73,23 @@ const Register = () => {
             setErrors({ ...errors })
         }
     }
-
     const Inputs = [
-        { id: "nickName", type: "text", placeholder: "nickName", value: `${userInput.nickName}`, name: 'nickName', onBlur: function (e) { handleOnBlur(nickNameValidate, userInput.userName, e.target.name) } },
-        { id: "text", type: "text", placeholder: "UserName", value: `${userInput.userName}`, name: 'userName', onBlur: function (e) { handleOnBlur(userNameValidate, userInput.userName, e.target.name) } },
-        { id: "password", type: "password", placeholder: "Password", value: `${userInput.password}`, name: 'password', onBlur: function (e) { handleOnBlur(passwordValidate, userInput.userName, e.target.name) } },
-        { id: "confirmPassword", type: "password", placeholder: "confirmPassword", value: `${userInput.confirmPassword}`, name: 'confirmPassword', onBlur: function (e) { handleOnBlur(confirmPasswordValidate, userInput.userName, e.target.name) } },
+        {
+            id: "nickName", type: "text", placeholder: "nickName", value: `${userInput.nickName}`, name: 'nickName',
+            onBlur: function (e) { handleOnBlur(nickNameValidate, e.target.name, userInput.nickName) }
+        },
+        {
+            id: "text", type: "text", placeholder: "UserName", value: `${userInput.userName}`, name: 'userName',
+            onBlur: function (e) { handleOnBlur(userNameValidate, e.target.name, userInput.userName) }
+        },
+        {
+            id: "password", type: "password", placeholder: "Password", value: `${userInput.password}`, name: 'password',
+            onBlur: function (e) { handleOnBlur(passwordValidate, e.target.name, userInput.password) }
+        },
+        {
+            id: "confirmPassword", type: "password", placeholder: "confirmPassword", value: `${userInput.confirmPassword}`, name: 'confirmPassword',
+            onBlur: function (e) { handleOnBlur(confirmPasswordValidate, e.target.name, userInput.confirmPassword, userInput.password) }
+        },
         { id: "image", type: "file", accept: "image/*", placeholder: "", hidden: true, name: 'image', },
     ]
 
@@ -128,7 +139,7 @@ const Register = () => {
                             </div>}
                     </div>
 
-                    <Button disabled={Object.keys(errors).length > 0} text="Sign Up" />
+                    <Button disabled={Object.keys(errors).length > 0}>Sign Up</Button>
                     <Link to="/login">
                         <p className="text-base text-primary text-center my-6 hover:underline">
                             {isAuthenticated ? "Back To Chat" :

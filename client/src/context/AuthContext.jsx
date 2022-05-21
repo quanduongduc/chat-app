@@ -1,10 +1,10 @@
-import { createContext, useReducer, useEffect, useState } from "react";
 import axios from 'axios';
+import { createContext, useEffect, useReducer, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import Toast from '../components/toast/Toast';
+import ToastModal from "../components/toast/ToastModal";
 import { apiURL } from "../constants/constants";
 import { authReducer } from "../reducers/authReducer";
-import { useNavigate } from "react-router-dom";
-import Toast from '../components/toast/Toast'
-import ToastModal from "../components/toast/ToastModal";
 import { setAuthToken } from "../utils/SetAuthToken";
 
 export const AuthContext = createContext();
