@@ -12,6 +12,26 @@ const registerValidator = [
     checkFalsy: true,
     checkNull: true,
   }),
+  body("nickName", {
+    success: false,
+    message: "NickName is not valid",
+  })
+    .isLength({ min: 5, max: 30 })
+    .matches(nickNameRegex),
+
+  body("userName", {
+    success: false,
+    message: "UserName is not valid",
+  })
+    .isLength({ min: 5, max: 30 })
+    .matches(userNameRegex),
+
+  body("password", {
+    success: false,
+    message: "Password is not valid",
+  })
+    .isLength({ min: 8 })
+    .matches(passwordRegex),
 
   body("confirmPassword", {
     success: false,

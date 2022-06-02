@@ -8,52 +8,22 @@ import { DateFormat } from "../../utils/DateTimeFormatter";
 import { debounce } from '../../utils/Debounce';
 import Avatar from "../avatar/Avatar";
 
-function ThreadBar({ threads, currentThread, setCurrentThread, setThreads }) {
+function ThreadBar({ threads, currentThread, setCurrentThread, handleThreadSwitch }) {
     const [searchUser, setSearchUser] = useState('');
     const { authState: { user }, logout } = useContext(AuthContext);
     const [serachedUsers, setSearchedUsers] = useState
         ([])
     const navigate = useNavigate();
-    const handleThreadSwitch = async (userId) => {
-        try {
-            const res = await axios.post(`${apiURL}/thread/${userId}`, {}, {
-                withCredentials: true,
-            })
-            if (res.data.success) {
-                if (currentThread) {
-                    if (currentThread._id !== res.data.thread._id) {
-                        setCurrentThread(res.data.thread)
-                    }
-                } else {
-                    setCurrentThread(res.data.thread);
-                }
 
-                setThreads(prev => {
-                    const isExisted = prev.some((thread) => {
-                        return thread._id === res.data.thread._id;
-                    });
-                    if (!isExisted) {
-                        return [...prev, res.data.thread]
-                    } else {
-                        return prev;
-                    }
-                })
-            }
-            setSearchedUsers([]);
-        } catch (error) {
-            if (error.response) {
-                console.log(error.response.data);
-            }
-            console.log(error);
-        }
+    function handleSearchUserClick(userId) {
+        handleThreadSwitch(userId);
+        setSearchedUsers([]);
     }
 
     const fetchUser = async (searchUser) => {
         if (searchUser) {
             try {
-                const res = await axios.post(`${apiURL}/user`, {
-                    nickName: searchUser
-                })
+                const res = await axios.get(`${apiURL}/user/search/${searchUser}`)
                 if (res.data.success) {
                     setSearchedUsers(res.data.users);
                 }
@@ -85,11 +55,11 @@ function ThreadBar({ threads, currentThread, setCurrentThread, setThreads }) {
             <div className="relative flex gap-2 border border-solid rounded-3xl px-5 py-2 my-5 border-lightGray w-full">
                 <SearchIcon></SearchIcon>
                 <input className="w-full outline-none" type="text" value={searchUser} onChange={handleSearchChange} placeholder="Search people or message" />
-                <div className="w-full gap-4 overflow-y-auto scrollbar absolute top-[calc(100%+20px)] left-0 flex flex-col justify-center bg-lightestGray">
+                <div className="w-full gap-4 max-h-[70vh] overflow-y-scroll scrollbar absolute top-[calc(100%+20px)] left-0 flex flex-col justify-center bg-lightestGray">
                     {
                         serachedUsers.map((user, index) => {
                             return (
-                                <div key={user._id} className="flex items-center gap-3 w-full cursor-pointer hover:bg-lightGray rounded-lg px-3 py-5" onClick={() => { handleThreadSwitch(user._id) }}>
+                                <div key={user._id} className="flex items-center gap-3 w-full cursor-pointer hover:bg-lightGray rounded-lg px-3 py-5" onClick={() => { handleSearchUserClick(user._id) }}>
                                     <div className="rounded-full w-12 h-12 overflow-hidden" >
                                         <Avatar avatarPath={user.avatarPath}></Avatar>
                                     </div>
@@ -147,7 +117,7 @@ function ThreadBar({ threads, currentThread, setCurrentThread, setThreads }) {
                     })
                 }
             </div>
-            <div className="relative group flex gap-3 bg-inherit items-center w-full p-5 border-t border-[rgba(0,0,0,0.16)] border-solid">
+            <div className="relative group flex gap-3 bg-inherit items-center w-full p-5 border-t border-[rgba(0,0,0,0.16)] border-solid mt-auto">
                 <div className="rounded-full w-12 h-12 overflow-hidden cursor-pointer hover:opacity-70" >
                     <Avatar avatarPath={user.avatarPath}></Avatar>
                 </div>

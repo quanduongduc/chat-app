@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useMemo, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import imagePicker from '../../assets/images/Frame.svg'
 import { AuthContext } from '../../context/AuthContext'
@@ -73,6 +73,7 @@ const Register = () => {
             setErrors({ ...errors })
         }
     }
+
     const Inputs = [
         {
             id: "nickName", type: "text", placeholder: "nickName", value: `${userInput.nickName}`, name: 'nickName',

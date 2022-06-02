@@ -6,6 +6,7 @@ import { SocketContext } from "../../context/SocketContext";
 import ThreadBar from "../layout/ThreadBar";
 import MessageInput from "./MessageInput";
 import Thread from "./Thread";
+import ThreadMatching from "./ThreadMatching";
 
 function MessageBox() {
     const [threads, setThreads] = useState([]);
@@ -50,6 +51,39 @@ function MessageBox() {
         }
     }
 
+    const handleThreadSwitch = async (userId) => {
+        try {
+            const res = await axios.post(`${apiURL}/thread/${userId}`, {}, {
+                withCredentials: true,
+            })
+            if (res.data.success) {
+                if (currentThread) {
+                    if (currentThread._id !== res.data.thread._id) {
+                        setCurrentThread(res.data.thread)
+                    }
+                } else {
+                    setCurrentThread(res.data.thread);
+                }
+
+                setThreads(prev => {
+                    const isExisted = prev.some((thread) => {
+                        return thread._id === res.data.thread._id;
+                    });
+                    if (!isExisted) {
+                        return [...prev, res.data.thread]
+                    } else {
+                        return prev;
+                    }
+                })
+            }
+        } catch (error) {
+            if (error.response) {
+                console.log(error.response.data);
+            }
+            console.log(error);
+        }
+    }
+
 
     useEffect(() => {
         getThreads();
@@ -78,38 +112,37 @@ function MessageBox() {
             setThreads(newSortedThreads);
         }
     }, [socketMessage])
-
     return (
         <>
-            {!isLoading ?
-                <div className="flex max-h-[100vh]">
-                    {
+            {
+                !isLoading ?
+                    <div className="flex max-h-[100vh]">
+                        {
 
-                        <ThreadBar threads={threads}
-                            currentThread={currentThread}
-                            setCurrentThread={setCurrentThread}
-                            setThreads={setThreads} />
-                    }
-                    {
-                        threads.length ?
-                            <div className="w-full flex flex-col">
-                                {
-                                    currentThread &&
-                                    <>
-                                        <Thread thread={currentThread}
-                                            socketMessage={currentThread && socketMessage?.thread?._id === currentThread._id ? socketMessage : null}></Thread>
-                                        <MessageInput thread={currentThread}
-                                            setSocketMessage={setSocketMessage}></MessageInput>
-                                    </>
-                                }
+                            <ThreadBar threads={threads}
+                                currentThread={currentThread}
+                                setCurrentThread={setCurrentThread}
+                                handleThreadSwitch={handleThreadSwitch} />
+                        }
+                        {
+                            threads.length ?
+                                <div className="w-full flex flex-col">
+                                    {
+                                        currentThread &&
+                                        <>
+                                            <Thread thread={currentThread}
+                                                socketMessage={currentThread && socketMessage?.thread?._id === currentThread._id ? socketMessage : null}></Thread>
+                                            <MessageInput thread={currentThread}
+                                                setSocketMessage={setSocketMessage}></MessageInput>
+                                        </>
+                                    }
 
-                            </div> :
-                            <div>You don't have a threads
-                                selected. </div>
-                    }
-                </div>
-                :
-                <img src={loadingIcon} alt="loading" />
+                                </div> :
+                                <ThreadMatching handleThreadSwitch={handleThreadSwitch} />
+                        }
+                    </div>
+                    :
+                    <img src={loadingIcon} alt="loading" />
             }
         </>
     )

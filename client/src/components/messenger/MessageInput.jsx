@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { useCallback, useContext, useEffect, useRef, useState } from 'react';
+import { useContext, useEffect, useRef, useState } from 'react';
 import documentIcon from '../../assets/images/document.svg';
 import imagePicker from '../../assets/images/Frame.svg';
 import closeIcon from '../../assets/images/icons8-close.svg';
@@ -17,12 +17,10 @@ function MessageInput({ thread, setSocketMessage }) {
     const [text, setText] = useState("");
     const [attachments, setAttractments] = useState([]);
 
-
-    const handleSendingMessage = useCallback((message) => {
-        setSocketMessage(message);
-    }, [setSocketMessage])
-
     const messageUpload = async () => {
+        if (!text && !attachments.length) {
+            return;
+        }
         const message = {
             sender: {
                 _id: user._id,
@@ -33,7 +31,7 @@ function MessageInput({ thread, setSocketMessage }) {
             thread: thread,
             createdAt: new Date(Date.now()).toISOString(),
         }
-        handleSendingMessage(message)
+        setSocketMessage(message)
         let data = null;
         if (attachments) {
             const formData = new FormData();

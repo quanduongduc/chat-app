@@ -1,5 +1,6 @@
 const Thread = require("../models/Thread");
 const { requiredAuth } = require("../middlewares/auth");
+const User = require("../models/User");
 
 const router = require("express").Router();
 

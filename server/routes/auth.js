@@ -79,7 +79,6 @@ router.post(
   registerValidator,
   requestValidator,
   async (req, res) => {
-    console.log(req.body);
     try {
       const { nickName, userName, password, confirmPassword } = req.body;
       const avatar = req.file;
@@ -125,19 +124,19 @@ router.post(
   }
 );
 
-router.post("/logout", async (req, res) => {
-  try {
-    res.clearCookie("accessToken");
-    return res.send({
-      success: true,
-      message: "Logout Successfully",
-    });
-  } catch (error) {
-    console.log(error);
-    return res
-      .status(500)
-      .json({ success: false, message: "Internal server error" });
-  }
-});
+// router.post("/logout", async (req, res) => {
+//   try {
+//     res.clearCookie("accessToken");
+//     return res.send({
+//       success: true,
+//       message: "Logout Successfully",
+//     });
+//   } catch (error) {
+//     console.log(error);
+//     return res
+//       .status(500)
+//       .json({ success: false, message: "Internal server error" });
+//   }
+// });
 
 module.exports = router;
