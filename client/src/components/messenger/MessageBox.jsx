@@ -19,7 +19,6 @@ function MessageBox() {
         const data = JSON.parse(res.data);
         switch (data.event) {
             case "returnMessage":
-                console.log(data);
                 setSocketMessage(data.message)
                 break;
             case "retrunTyping":
@@ -95,7 +94,6 @@ function MessageBox() {
         if (!socketMessage) {
             return;
         }
-        console.log(socketMessage);
         if (threads.findIndex((thread) => {
             return thread._id === socketMessage.thread._id;
         }) === -1) {

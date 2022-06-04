@@ -5,11 +5,7 @@ import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 import mobileDetect from "./utils/mobileDectect";
 import mobileError from "./assets/images/mobile_error.jpeg";
-console.log(mobileError);
 
-console.log(
-  mobileDetect(navigator.userAgent || navigator.vendor || window.opera)
-);
 ReactDOM.render(
   <React.StrictMode>
     {!mobileDetect(navigator.userAgent || navigator.vendor || window.opera) ? (
