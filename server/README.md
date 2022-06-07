@@ -125,7 +125,7 @@ OR
   None
 * **Bearer token**
   **Required:**
-  `accessToken=[String]`
+  `Authentication Bearer=[String](Bearer accessToken)`
   
 * **Success Response:**
 
@@ -158,8 +158,58 @@ OR
     "message": "User Not Found",
     }
     ```
+    
+**Message Upload**
+----
+  receive message from client and handle it (upload attachment to cloud, ...) and return processed message to client.
 
+* **URL**
 
+  /message
+
+* **Method:**
+
+  `POST`
+  
+* **Requirement:**
+  Authenticated !!!.
+*  **URL Params**
+  None
+* **Data Params**
+  None
+  
+* **Success Response:**
+
+  * **Code:** 200 <br />
+    **Content:** 
+    ```JSON
+     { 
+      "success": true,
+      "message": "Authenticate Successfully",
+      "user": user
+      }
+    ```
+ 
+* **Error Response:**
+* 
+  * **Code:** 401 UNAUTHORIZED <br />
+    **Content:** 
+    ```JSON
+     { 
+      "success": false,
+      "message": "AccessToken Not Found"
+      }
+     ```
+OR
+ * **Code:** 401 UNAUTHORIZED <br />
+    **Content:** 
+    ```JSON
+    {
+    "success": false,
+    "message": "User Not Found",
+    }
+    ```
+    
 
 WebSocket Server API
 ===================
