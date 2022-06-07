@@ -31,17 +31,24 @@ Express Server API<a name="TOP"></a>
 * **Success Response:**
 
   * **Code:** 200 <br />
-    **Content:** `{ success: true,
-        message: "Register Successfully",
-        accessToken }`
+    **Content:** 
+    ```JSON
+    { 
+    "success": true,
+    "message": "Register Successfully",
+    "accessToken": accessToken
+    }```
  
 * **Error Response:**
 * 
   * **Code:** 401 UNAUTHORIZED <br />
-    **Content:** `{
-    success: false,
-    message: "User Name is already taken"
-    }`
+    **Content:** 
+    ```JSON
+    {
+    "success": false,
+    "message": "User Name is already taken"
+    }
+    ```JSON
 
 **User Login**
 ----
@@ -70,23 +77,34 @@ Express Server API<a name="TOP"></a>
 * **Success Response:**
 
   * **Code:** 200 <br />
-    **Content:** `{ success: true,
-        message: "Login Successfully",
-        accessToken }`
+    **Content:** 
+    ```JSON
+    { 
+    "success": true,
+    "message": "Login Successfully",
+    "accessToken": accessToken
+    }
+        ```
  
 * **Error Response:**
 * 
   * **Code:** 401 UNAUTHORIZED <br />
-    **Content:** `{
-     success: false,
-     message: "userName not Found",
-    }`
+    **Content:** 
+    ```JSON
+    {
+     "success": false,
+     "message": "userName not Found",
+    }
+    ```
 OR
  * **Code:** 401 UNAUTHORIZED <br />
-    **Content:** `{
-    success: false,
-    message: "userName or password is incorrect"
-    }`
+    **Content:** 
+    ```JSON
+    {
+    "success": false,
+    "message": "userName or password is incorrect"
+    }
+    ```
     
 **User Authenticate**
 ----
@@ -116,23 +134,27 @@ OR
      { 
       "success": true,
       "message": "Authenticate Successfully",
-      user, 
+      "user": user, 
       }
     ```
  
 * **Error Response:**
 * 
   * **Code:** 401 UNAUTHORIZED <br />
-    **Content:** `{
-     success: false,
-     message: "AccessToken Not Found"
-    }`
+    **Content:** 
+    ```JSON
+     { 
+      "success": false,
+      "message": "AccessToken Not Found",
+      }
+     ```
 OR
  * **Code:** 401 UNAUTHORIZED <br />
-    **Content:** `{
-    success: false,
-    message: "User Not Found",
-    }`
+    **Content:** 
+    ```JSON{
+    "success": false,
+    "message": "User Not Found",
+    }```
 
 WebSocket Server API
 ===================
