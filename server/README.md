@@ -37,7 +37,8 @@ Express Server API<a name="TOP"></a>
     "success": true,
     "message": "Register Successfully",
     "accessToken": accessToken
-    }```
+    }
+    ```
  
 * **Error Response:**
 * 
@@ -48,7 +49,7 @@ Express Server API<a name="TOP"></a>
     "success": false,
     "message": "User Name is already taken"
     }
-    ```JSON
+    ```
 
 **User Login**
 ----
@@ -84,7 +85,7 @@ Express Server API<a name="TOP"></a>
     "message": "Login Successfully",
     "accessToken": accessToken
     }
-        ```
+    ```
  
 * **Error Response:**
 * 
