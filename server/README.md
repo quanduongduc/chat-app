@@ -152,7 +152,8 @@ OR
 OR
  * **Code:** 401 UNAUTHORIZED <br />
     **Content:** 
-    ```JSON{
+    ```JSON
+    {
     "success": false,
     "message": "User Not Found",
     }
