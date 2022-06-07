@@ -111,9 +111,14 @@ OR
 * **Success Response:**
 
   * **Code:** 200 <br />
-    **Content:** `{ success: true,
+    **Content:** 
+    ```json
+     { 
+      success: true,
       message: "Authenticate Successfully",
-      user, }`
+      user, 
+      }
+    ```
  
 * **Error Response:**
 * 
