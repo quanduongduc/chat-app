@@ -94,7 +94,7 @@ Express Server API<a name="TOP"></a>
     ```JSON
     {
      "success": false,
-     "message": "userName not Found",
+     "message": "userName not Found"
     }
     ```
 OR
@@ -135,7 +135,7 @@ OR
      { 
       "success": true,
       "message": "Authenticate Successfully",
-      "user": user, 
+      "user": user
       }
     ```
  
@@ -146,7 +146,7 @@ OR
     ```JSON
      { 
       "success": false,
-      "message": "AccessToken Not Found",
+      "message": "AccessToken Not Found"
       }
      ```
 OR
@@ -155,7 +155,8 @@ OR
     ```JSON{
     "success": false,
     "message": "User Not Found",
-    }```
+    }
+    ```
 
 WebSocket Server API
 ===================
