@@ -88,49 +88,45 @@ OR
     message: "userName or password is incorrect"
     }`
     
-    **User Authenticate**
+**User Authenticate**
 ----
-  Check User's authentication information then return access token.
+  Access tokens authentication.
 
 * **URL**
 
-  /auth/login
+  /auth
 
 * **Method:**
 
-  `POST`
+  `GET`
   
 *  **URL Params**
   None
 * **Data Params**
-
-   **Required:**
- 
-   `userName=[String]`
-   `password=[String]`
-
-   **Optional:**
-  None 
-
+  None
+* **Bearer token**
+  **Required:**
+  `accessToken=[String]`
+  
 * **Success Response:**
 
   * **Code:** 200 <br />
     **Content:** `{ success: true,
-        message: "Login Successfully",
-        accessToken }`
+      message: "Authenticate Successfully",
+      user, }`
  
 * **Error Response:**
 * 
   * **Code:** 401 UNAUTHORIZED <br />
     **Content:** `{
      success: false,
-     message: "userName not Found",
+     message: "AccessToken Not Found"
     }`
 OR
  * **Code:** 401 UNAUTHORIZED <br />
     **Content:** `{
     success: false,
-    message: "userName or password is incorrect"
+    message: "User Not Found",
     }`
 
 WebSocket Server API
