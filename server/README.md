@@ -1,55 +1,137 @@
 Express Server API<a name="TOP"></a>
 ===================
 - - - - 
-**Show User**
+**Register New User**
 ----
-  Returns json data about a single user.
+  Create new user if not existed and return access token.
 
 * **URL**
 
-  /users/:id
+  /auth/register
 
 * **Method:**
 
-  `GET`
+  `POST`
   
 *  **URL Params**
+  None
+* **Data Params**
 
    **Required:**
  
-   `id=[integer]`
+   `nickName=[String]`
+   `userName=[String]`
+   `password=[String]`
+   `confirmPassword=[String]`
 
-* **Data Params**
-
-  None
+   **Optional:**
+ 
+   `avatar=[File]`
 
 * **Success Response:**
 
   * **Code:** 200 <br />
-    **Content:** `{ id : 12, name : "Michael Bloom" }`
+    **Content:** `{ success: true,
+        message: "Register Successfully",
+        accessToken }`
  
 * **Error Response:**
-
-  * **Code:** 404 NOT FOUND <br />
-    **Content:** `{ error : "User doesn't exist" }`
-
-  OR
-
+* 
   * **Code:** 401 UNAUTHORIZED <br />
-    **Content:** `{ error : "You are unauthorized to make this request." }`
+    **Content:** `{
+    success: false,
+    message: "User Name is already taken"
+    }`
 
-* **Sample Call:**
+**User Login**
+----
+  Check User's authentication information then return access token.
 
-  ```javascript
-    $.ajax({
-      url: "/users/1",
-      dataType: "json",
-      type : "GET",
-      success : function(r) {
-        console.log(r);
-      }
-    });
-  ```
+* **URL**
+
+  /auth/login
+
+* **Method:**
+
+  `POST`
   
+*  **URL Params**
+  None
+* **Data Params**
+
+   **Required:**
+ 
+   `userName=[String]`
+   `password=[String]`
+
+   **Optional:**
+  None 
+
+* **Success Response:**
+
+  * **Code:** 200 <br />
+    **Content:** `{ success: true,
+        message: "Login Successfully",
+        accessToken }`
+ 
+* **Error Response:**
+* 
+  * **Code:** 401 UNAUTHORIZED <br />
+    **Content:** `{
+     success: false,
+     message: "userName not Found",
+    }`
+OR
+ * **Code:** 401 UNAUTHORIZED <br />
+    **Content:** `{
+    success: false,
+    message: "userName or password is incorrect"
+    }`
+    
+    **User Authenticate**
+----
+  Check User's authentication information then return access token.
+
+* **URL**
+
+  /auth/login
+
+* **Method:**
+
+  `POST`
+  
+*  **URL Params**
+  None
+* **Data Params**
+
+   **Required:**
+ 
+   `userName=[String]`
+   `password=[String]`
+
+   **Optional:**
+  None 
+
+* **Success Response:**
+
+  * **Code:** 200 <br />
+    **Content:** `{ success: true,
+        message: "Login Successfully",
+        accessToken }`
+ 
+* **Error Response:**
+* 
+  * **Code:** 401 UNAUTHORIZED <br />
+    **Content:** `{
+     success: false,
+     message: "userName not Found",
+    }`
+OR
+ * **Code:** 401 UNAUTHORIZED <br />
+    **Content:** `{
+    success: false,
+    message: "userName or password is incorrect"
+    }`
+
 WebSocket Server API
 ===================
