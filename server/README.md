@@ -114,8 +114,8 @@ OR
     **Content:** 
     ```JSON
      { 
-      success: true,
-      message: "Authenticate Successfully",
+      "success": true,
+      "message": "Authenticate Successfully",
       user, 
       }
     ```
