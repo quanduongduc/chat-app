@@ -26,7 +26,7 @@ Express Server API<a name="TOP"></a>
 
    **Optional:**
  
-   `avatar=[File]`
+   `avatar=[File/image]`
 
 * **Success Response:**
 
@@ -83,7 +83,7 @@ Express Server API<a name="TOP"></a>
     { 
     "success": true,
     "message": "Login Successfully",
-    "accessToken": accessToken
+    "accessToken": "AcCesSToKeN"
     }
     ```
  
@@ -158,6 +158,8 @@ OR
     "message": "User Not Found",
     }
     ```
+
+
 
 WebSocket Server API
 ===================
