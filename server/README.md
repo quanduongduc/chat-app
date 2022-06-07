@@ -125,7 +125,7 @@ OR
   None
 * **Bearer token**
   **Required:**
-  `Authentication Bearer=[String](Bearer accessToken)`
+  `Authorization Bearer=[String](Bearer accessToken)`
   
 * **Success Response:**
 
@@ -192,12 +192,12 @@ OR
  
 * **Error Response:**
 * 
-  * **Code:** 401 UNAUTHORIZED <br />
+  * **Code:** 422 UNPROCESSABLE ENTITY<br />
     **Content:** 
     ```JSON
      { 
-      "success": false,
-      "message": "AccessToken Not Found"
+      success: false,
+      message: "Message not found"
       }
      ```
 OR
