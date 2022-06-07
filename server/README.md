@@ -112,7 +112,7 @@ OR
 
   * **Code:** 200 <br />
     **Content:** 
-    ```json
+    ```JSON
      { 
       success: true,
       message: "Authenticate Successfully",
