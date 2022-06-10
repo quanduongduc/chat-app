@@ -371,4 +371,3 @@ Get random users.
     }
     ```
 
-# WebSocket Server API
