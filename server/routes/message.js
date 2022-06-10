@@ -68,14 +68,13 @@ router.post(
       );
       return res.send({
         success: true,
-        message: "Send message Successfully",
+        message: "Upload message Successfully",
         attachments,
       });
     } catch (error) {
       console.log(error);
       // cloudinary file's maximum size error
       if (error.name) {
-        console.log("checked");
         return res.status(400).json({
           success: false,
           message: error,
@@ -89,9 +88,17 @@ router.post(
   }
 );
 
-router.get("/:threadId", async (req, res) => {
+router.get("/:threadId", requiredAuth, async (req, res) => {
   try {
     const { threadId } = req.params;
+    const { userId } = req.body;
+    const thread = await Thread.findById(threadId).select("members").exec();
+    if (!thread.members.includes(userId)) {
+      return res.status(401).json({
+        success: false,
+        message: "Access Denied",
+      });
+    }
     const messages = await Message.find({
       thread: threadId,
     })
@@ -99,18 +106,13 @@ router.get("/:threadId", async (req, res) => {
       .populate("sender", "_id nickName avatarPath")
       .populate("attachments")
       .exec();
-    if (!messages) {
-      return res.status(404).json({
-        success: false,
-        message: "Messages Not Found",
-      });
-    }
     return res.send({
       success: true,
       message: "Messages ready",
       messages,
     });
   } catch (error) {
+    console.log(error);
     return res.status(500).json({
       success: false,
       message: "Internal Server Error",

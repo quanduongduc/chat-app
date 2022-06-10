@@ -1,49 +1,51 @@
-Express Server API<a name="TOP"></a>
-===================
-- - - - 
-**Register New User**
-----
-  Create new user if not existed and return access token.
+# Express Server API
 
-* **URL**
+---
+
+## **Register New User**
+
+Create new user if not existed and return access token.
+
+- **URL**
 
   /auth/register
 
-* **Method:**
+- **Method:**
 
   `POST`
-  
-*  **URL Params**
+
+- **URL Params**
   None
-* **Data Params**
+- **Data Params**
 
-   **Required:**
- 
-   `nickName=[String]`
-   `userName=[String]`
-   `password=[String]`
-   `confirmPassword=[String]`
+  **Required:**
 
-   **Optional:**
- 
-   `avatar=[File/image]`
+  `nickName=[String]`  
+  `userName=[String]`  
+  `password=[String]`  
+  `confirmPassword=[String]`
 
-* **Success Response:**
+  **Optional:**
 
-  * **Code:** 200 <br />
-    **Content:** 
+  `avatar=[File/image]`
+
+- **Success Response:**
+
+  - **Code:** 200  
+  - **Content:**  
+
     ```JSON
-    { 
+    {
     "success": true,
     "message": "Register Successfully",
     "accessToken": accessToken
     }
     ```
- 
-* **Error Response:**
-* 
-  * **Code:** 401 UNAUTHORIZED <br />
-    **Content:** 
+
+- **Error Response:**
+  - **Code:** 401 UNAUTHORIZED
+  - **Content:**  
+
     ```JSON
     {
     "success": false,
@@ -51,165 +53,322 @@ Express Server API<a name="TOP"></a>
     }
     ```
 
-**User Login**
-----
-  Check User's authentication information then return access token.
+## **User Login**
 
-* **URL**
+Check User's authentication information then return access token.
+
+- **URL**
 
   /auth/login
 
-* **Method:**
+- **Method:**
 
   `POST`
-  
-*  **URL Params**
+
+- **URL Params**
   None
-* **Data Params**
+- **Data Params**
 
-   **Required:**
- 
-   `userName=[String]`
-   `password=[String]`
+  **Required:**
 
-   **Optional:**
-  None 
+  `userName=[String]`  
+  `password=[String]`  
 
-* **Success Response:**
+  **Optional:**
+  None
 
-  * **Code:** 200 <br />
-    **Content:** 
+- **Success Response:**
+
+  - **Code:** 200  
+  - **Content:**  
+
     ```JSON
-    { 
+    {
     "success": true,
     "message": "Login Successfully",
     "accessToken": "AcCesSToKeN"
     }
     ```
- 
-* **Error Response:**
-* 
-  * **Code:** 401 UNAUTHORIZED <br />
-    **Content:** 
+
+- **Error Response:**
+  - **Code:** 401 UNAUTHORIZED
+  - **Content:**  
+
     ```JSON
-    {
-     "success": false,
-     "message": "userName not Found"
+    { 
+      "success": false,
+      "message": "userName not Found"
     }
     ```
-OR
- * **Code:** 401 UNAUTHORIZED <br />
-    **Content:** 
-    ```JSON
-    {
+
+    OR
+  - **Code:** 401 UNAUTHORIZED  
+  - **Content:**  
+
+  ```JSON
+  {
     "success": false,
     "message": "userName or password is incorrect"
-    }
-    ```
-    
-**User Authenticate**
-----
-  Access tokens authentication.
+  }
+  ```
 
-* **URL**
+## **User Authenticate**
+
+Access tokens authentication.
+
+- **URL**
 
   /auth
 
-* **Method:**
+- **Method:**
 
   `GET`
-  
-*  **URL Params**
-  None
-* **Data Params**
-  None
-* **Bearer token**
-  **Required:**
-  `Authorization Bearer=[String](Bearer accessToken)`
-  
-* **Success Response:**
 
-  * **Code:** 200 <br />
-    **Content:** 
+- **URL Params**
+  None
+- **Data Params**
+  None
+- **Bearer token**  
+  **Required:**  
+  `Authorization Bearer=[String](Bearer accessToken)`
+- **Success Response:**
+
+  - **Code:** 200     **Content:**
+
     ```JSON
-     { 
+    {
       "success": true,
       "message": "Authenticate Successfully",
       "user": user
-      }
-    ```
- 
-* **Error Response:**
-* 
-  * **Code:** 401 UNAUTHORIZED <br />
-    **Content:** 
-    ```JSON
-     { 
-      "success": false,
-      "message": "AccessToken Not Found"
-      }
-     ```
-OR
- * **Code:** 401 UNAUTHORIZED <br />
-    **Content:** 
-    ```JSON
-    {
-    "success": false,
-    "message": "User Not Found",
     }
     ```
-    
-**Message Upload**
-----
-  receive message from client and handle it (upload attachment to cloud, ...) and return processed message to client.
 
-* **URL**
+- **Error Response:**
+  - **Code:** 401 UNAUTHORIZED
+  - **Content:**  
+
+    ```JSON
+    { 
+      "success": false,
+      "message": "AccessToken Not Found" 
+    }
+    ```
+
+    OR
+- **Code:** 401 UNAUTHORIZED
+  **Content:**
+
+  ```JSON
+  {
+  "success": false,
+  "message": "User Not Found",
+  }
+  ```
+
+## **Message Upload**
+
+Receive message from client and handle it (upload attachment to cloud, ...) and return processed message to client.
+
+- **URL**
 
   /message
 
-* **Method:**
+- **Method:**
 
   `POST`
-  
-* **Requirement:**
-  Authenticated !!!.
-*  **URL Params**
-  None
-* **Data Params**
-  None
-  
-* **Success Response:**
 
-  * **Code:** 200 <br />
-    **Content:** 
-    ```JSON
-     { 
-      "success": true,
-      "message": "Authenticate Successfully",
-      "user": user
-      }
-    ```
- 
-* **Error Response:**
-* 
-  * **Code:** 422 UNPROCESSABLE ENTITY<br />
-    **Content:** 
-    ```JSON
-     { 
-      success: false,
-      message: "Message not found"
-      }
-     ```
-OR
- * **Code:** 401 UNAUTHORIZED <br />
-    **Content:** 
+- **Requirement:**
+  Authenticated !!!.
+- **URL Params:**
+  None
+- **Data Params:**  
+  **Required:**  
+  `senderId=[String]`  
+  `threadId=[String]`  
+  `text=[String]` `attactments=[File]` (Require at least one)
+- **Success Response:**
+
+  - **Code:** 200     **Content:**
+
     ```JSON
     {
-    "success": false,
-    "message": "User Not Found",
+      "success": true,
+        "message": "Upload message Successfully",
+        "attachments" : attachments
     }
     ```
-    
 
-WebSocket Server API
-===================
+- **Error Response:**
+  - **Code:** 422 UNPROCESSABLE ENTIT
+  - **Content:**  
+
+    ```JSON
+    {
+      "success": false,
+      "message": "Message not found"
+    }
+    ```
+
+## **Get Messages**
+
+Return all messages in  a thread.
+
+- **URL**
+
+  /message/:threadId
+
+- **Method:**
+
+  `GET`
+
+- **Requirement:**
+  Authenticated !!!.
+- **URL Params:**  
+  **Required:**  
+  `threadId=[String]`
+- **Data Params:** None
+  
+- **Success Response:**
+
+  - **Code:** 200     **Content:**
+
+    ```JSON
+    {
+      "success": true,
+      "message": "Messages ready",
+      "messages" : messages
+    }
+    ```
+
+- **Error Response:**
+  - **Code:** 401 Unauthorized
+  - **Content:**  
+
+    ```JSON
+    {
+        "success": false,
+        "message": "Access Denied",
+    }
+    ```
+
+  - **Note:**
+    non-members's request
+
+## **Get Threads**
+
+Return all threads of an user.
+
+- **URL**
+
+  /thread
+
+- **Method:**
+
+  `GET`
+
+- **Requirement:**
+  Authenticated !!!.
+- **URL Params:** None
+- **Data Params:** None
+  
+- **Success Response:**
+
+  - **Code:** 200     **Content:**
+
+    ```JSON
+    {
+      "success": true,
+      "message": "Get Threads successfully",
+      "threads": threads
+    }
+    ```
+
+## **Get thread by UserID**
+
+Get a thread by userId(Create if not existed).
+
+- **URL**
+
+  /thread
+
+- **Method:**
+
+  `POST`
+
+- **Requirement:**
+  Authenticated !!!.
+- **URL Params:**
+  **Required:**  
+  `userId=[String]`
+- **Data Params:** None
+  
+- **Success Response:**
+
+  - **Code:** 200     **Content:**
+
+    ```JSON
+    {
+      "success": true,
+      "message": "Get Thread successfully",
+      "thread": thread
+    }
+    ```
+
+    **Note:** If thread is existed  
+
+    OR
+
+    - **Code:** 200  
+    - **Content:**  
+
+    ```JSON
+    {
+      "success": true,
+      "message": "New Thread was created",
+      "thread":thread
+    }
+    ```
+
+## **Get random Users**
+
+Get random users.
+
+- **URL**
+
+  /user/random/:number
+
+- **Method:**
+
+  `GET`
+
+- **Requirement:** None
+- **URL Params:**   
+
+  `number=[String]`
+- **Data Params:** None
+  
+- **Success Response:**
+
+  - **Code:** 200  
+  - **Content:**
+
+    ```JSON
+    {
+      "success": true,
+      "message": "get random user succesfull",
+      "users" : users
+    }
+    ```
+
+- **Error Response:**
+  - **Code:** 422 UNPROCESSABLE ENTIT
+  - **Content:**  
+
+    ```JSON
+    {
+      "success": false,
+      "message": "Invalid params format"
+    }
+    ```
+
+# WebSocket Server API

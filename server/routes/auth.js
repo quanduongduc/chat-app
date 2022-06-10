@@ -48,7 +48,7 @@ router.post("/login", loginValidator, requestValidator, async (req, res) => {
     if (!user) {
       return res.status(401).json({
         success: false,
-        message: "UserName not Found",
+        message: "userName not Found",
       });
     }
     const isPasswordMatched = await bcrypt.compare(password, user.password);

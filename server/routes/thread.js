@@ -1,7 +1,6 @@
 const Thread = require("../models/Thread");
 const { requiredAuth } = require("../middlewares/auth");
 const User = require("../models/User");
-
 const router = require("express").Router();
 
 router.get("/", requiredAuth, async (req, res) => {
@@ -19,12 +18,6 @@ router.get("/", requiredAuth, async (req, res) => {
       .select("_id updatedAt members")
       .populate("members", "-password")
       .exec();
-    if (!threads) {
-      return res.status(404).json({
-        success: false,
-        message: "No threads Found",
-      });
-    }
     return res.send({
       success: true,
       message: "Get Threads successfully",
@@ -74,7 +67,6 @@ router.post("/:userId", requiredAuth, async (req, res) => {
       });
     }
   } catch (error) {
-    console.log(error);
     return res.status(500).json({
       success: false,
       message: "Internal Server Error",

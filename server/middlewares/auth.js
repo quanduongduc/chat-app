@@ -17,7 +17,6 @@ const requiredAuth = async (req, res, next) => {
       _id: verify.userId,
     });
     if (!isExistedUser) {
-      res.clearCookie("accessToken");
       return res.status(401).json({
         success: false,
         message: "User Not Found",

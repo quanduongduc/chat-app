@@ -43,12 +43,18 @@ router.get("/search/:nickName", async (req, res) => {
   }
 });
 
-router.get("/random", async (req, res) => {
+router.get("/random/:number", async (req, res) => {
   try {
-    console.log(req);
+    const { number = parseInt(number) } = req.params;
+    if (isNaN(number)) {
+      return res.status(422).json({
+        success: false,
+        message: "Invalid params format",
+      });
+    }
     const users = await User.aggregate([
       {
-        $sample: { size: 3 },
+        $sample: { size: parseInt(number) },
       },
       {
         $project: {
@@ -62,7 +68,6 @@ router.get("/random", async (req, res) => {
       users,
     });
   } catch (error) {
-    console.log(error);
     return res.status(500).json({
       success: false,
       message: "Internal Server Error",
