@@ -65,8 +65,8 @@ function Message({ message, isSender, isLast }) {
                                 return <video onLoad={isLast ? scrollTo : undefined} className="rounded-3xl max-w-md w-md" key={_id} src={path} controls></video>
                             default:
                                 return (
-                                    <div className={`flex-1 w-full basis-full ${isSender && "flex justify-end"}`}>
-                                        <a key={_id} href={path} className={`flex items-center gap-2 py-4 px-6 max-w-fit w-fit rounded-3xl text-sm ${isSender ?
+                                    <div key={_id} className={`flex-1 w-full basis-full ${isSender && "flex justify-end"}`}>
+                                        <a href={path} className={`flex items-center gap-2 py-4 px-6 max-w-fit w-fit rounded-3xl text-sm ${isSender ?
                                             "bg-darkCyan ml-auto text-right"
                                             :
                                             "bg-lightestGray text-left"

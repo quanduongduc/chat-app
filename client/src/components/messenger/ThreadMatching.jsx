@@ -13,7 +13,7 @@ function ThreadMatching({ handleThreadSwitch }) {
 
     async function handleThreadMatching() {
         try {
-            const res = await axios.get(`${apiURL}/user/random`)
+            const res = await axios.get(`${apiURL}/user/random/3`)
             console.log(res);
             if (res.data.success) {
                 setOtherUsers(res.data.users);

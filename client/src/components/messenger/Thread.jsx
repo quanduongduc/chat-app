@@ -12,11 +12,6 @@ function Thread({ thread, socketMessage }) {
     const [loading, setLoading] = useState(true);
     const [messages, setMessages] = useState([]);
     const { user } = useContext(AuthContext).authState;
-    useEffect(() => {
-        if (socketMessage) {
-            setMessages((messages) => [...messages, socketMessage]);
-        }
-    }, [socketMessage])
 
     const threadBoxRef = useRef();
 
@@ -29,6 +24,7 @@ function Thread({ thread, socketMessage }) {
             if (response.data.success) {
                 setMessages(response.data.messages);
                 setLoading(false);
+                scrollToEnd();
             }
         } catch (error) {
             if (error.response) {
@@ -38,14 +34,25 @@ function Thread({ thread, socketMessage }) {
         }
     }
 
+    function scrollToEnd() {
+        console.log("Scroll to end");
+        threadBoxRef.current.scrollTop = threadBoxRef.current.scrollHeight;
+    }
+
     useEffect(() => {
-        if (threadBoxRef.current) {
-            threadBoxRef.current.scrollTop = threadBoxRef.current.scrollHeight
+        if (socketMessage) {
+            setMessages((messages) => [...messages, socketMessage]);
         }
+    }, [socketMessage])
+
+    useEffect(() => {
+        scrollToEnd();
+    }, [messages])
+
+    useEffect(() => {
+        getMessages();
         return () => {
-            return () => {
-                setLoading(true);
-            }
+            setLoading(true);
         }
     }, [])
 

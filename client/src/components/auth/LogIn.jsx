@@ -1,7 +1,6 @@
 import React, { useContext, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { AuthContext } from '../../context/AuthContext'
-import { passwordValidate, userNameValidate } from '../../utils/FormValidator'
 import Button from '../form/Button'
 import TextField from '../form/TextField'
 

@@ -58,7 +58,16 @@ function MessageInput({ thread, setSocketMessage }) {
 
         if (res) {
             const { attachments } = res.data;
-            ws.send(JSON.stringify({
+            // ws.send(JSON.stringify({
+            //     event: "clientMessage",
+            //     message: {
+            //         text: text,
+            //         sender: user._id,
+            //         threadId: thread._id,
+            //         attachments,
+            //     }
+            // }))
+            ws.send({
                 event: "clientMessage",
                 message: {
                     text: text,
@@ -66,7 +75,7 @@ function MessageInput({ thread, setSocketMessage }) {
                     threadId: thread._id,
                     attachments,
                 }
-            }))
+            })
         }
     }
 
